@@ -9,3 +9,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Runs the server on commandline.
 
+**Note: Do not push directly to master!!**
+
+
