@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 // Creating a schema, sort of like working with an ORM
@@ -16,7 +16,7 @@ const UserSchema = new Schema({
         required: [true, "Name field is required."],
     },
     age: {
-        type: Int16Array,
+        type: Number,
         required: [true, "Age field is required."],
     },
     sex: {
@@ -41,7 +41,7 @@ const UserSchema = new Schema({
         type: [String],
     },
     messages: {
-        type: [Int32Array],
+        type: [Number],
     },
 });
 
@@ -49,5 +49,4 @@ const UserSchema = new Schema({
 const User = mongoose.model("user", UserSchema);
 
 // Exporting table for querying and mutating
-//module.exports = User;
-export default User
+export default User;

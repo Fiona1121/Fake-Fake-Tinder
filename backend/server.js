@@ -1,5 +1,5 @@
-import { createRequire } from "module";//new
-const require = createRequire(import.meta.url);//new
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 require("dotenv-defaults").config();
 
 const http = require("http");
@@ -7,14 +7,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const WebSocket = require("ws");
 
-import Image from "./models/image.js"
-import Message from "./models/message.js"
-import User from "./models/user.js"
-// const Image = require("./models/image.js");
-// const Message = require("./models/message");
-// const User = require("./models/user");
-// import { createRequire } from "module";
-// const require = createRequire(import.meta.url);
+import Image from "./models/image.js";
+import User from "./models/user.js";
+import Message from "./models/message.js";
 
 const app = express();
 const server = http.createServer(app);
