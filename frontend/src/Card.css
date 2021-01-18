@@ -1,0 +1,48 @@
+.card {
+    position: relative;
+    width: 600px;
+    padding: 20px;
+    max-width: 85vw;
+    height: 50vh;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.card > h3 {
+    position: absolute;
+    bottom: 10px;
+    color: white;
+}
+.cardContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 5vh;
+}
+
+.swipe {
+    position: absolute;
+}
+
+.swipeButtons {
+    position: fixed;
+    bottom: 10vh;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.swipeButtons .MuiIconButton-root {
+    background-color: white;
+    box-shadow: 0px 10px 53px 0px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swipeButtons__left {
+    padding: 2.5vw !important;
+    color: #ec5e6f !important;
+}
+.swipeButtons__right {
+    padding: 2.5vw !important;
+    color: #76e2b3 !important;
+}

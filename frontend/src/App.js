@@ -1,7 +1,12 @@
 import React from "react";
 import "./App.css";
 import Header from "./Header";
+
+import Accountinterface from "./container/accountinterface/accountinterface"
+import Useriinfo from "./container/userinfo/userinfo"
+
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Card from "./Card";
 
 function App() {
     return (
@@ -16,10 +21,18 @@ function App() {
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" />
+                        <Accountinterface/>   
                     </Route>
-                    <Route path="/">
+
+                    <Route exact path="/">
                         <Header />
+                        <Card />
                     </Route>
+
+                    <Route path="/userinfo">
+                        <Useriinfo/> 
+                    </Route>
+                    
                 </Switch>
             </Router>
         </div>
