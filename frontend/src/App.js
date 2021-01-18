@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import Header from "./Header";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Card from "./Card";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     </Route>
                     <Route path="/">
                         <Header />
+                        <Card />
                     </Route>
                 </Switch>
             </Router>
