@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import TinderCard from "react-tinder-card";
 import CloseIcon from "@material-ui/icons/Close";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -8,21 +8,11 @@ import client from "./client";
 
 const Card = () => {
     const [people, setPeople] = useState([]);
+    const [likedBy, setLikedBy] = useState([]);
+    const [like, setLike] = useState([]);
     const [status, setStatus] = useState({});
-    /*setPeople([
-        {
-            name: "Richard Hendricks",
-            url: "https://web.ntnu.edu.tw/~40047006S/hw1/4.jpg",
-        },
-        {
-            name: "Jared Dunn",
-            url: "https://n.sinaimg.cn/sinakd20119/400/w1000h1000/20200413/169e-isehnni9177009.jpg",
-        },
-        {
-            name: "Dinesh Chugtai",
-            url: "https://assets.juksy.com/files/articles/82528/800x_100_w-5b9876010acba.jpg",
-        },
-    ]);*/
+    const [lastDirection, setLastDirection] = useState();
+    const alreadyRemoved = [];
 
     client.onmessage = (message) => {
         const { data } = message;
@@ -50,21 +40,49 @@ const Card = () => {
         client.send(JSON.stringify(data));
     };
 
+    const outOfFrame = (id) => {
+        console.log(id + " left the screen!");
+    };
+
+    const swiped = (direction, idToDelete) => {
+        console.log("removing: " + idToDelete);
+        setLastDirection(direction);
+        alreadyRemoved.push(idToDelete);
+        console.log(alreadyRemoved);
+        if (direction === "left") {
+            addDislike(idToDelete);
+        }
+        if (direction === "right") {
+            addLike(idToDelete);
+        }
+    };
+
+    const swipe = (dir) => {
+        const cardsLeft = people.filter((person) => !alreadyRemoved.includes(person.name));
+        if (cardsLeft.length) {
+            const toBeRemoved = cardsLeft[cardsLeft.length - 1].id; // Find the card object to be removed
+            const index = people.map((person) => person.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
+            alreadyRemoved.push(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
+        }
+    };
+
     const addLike = (id) => {
+        swipe("right");
         sendData(["like", id]);
     };
 
     const addDislike = (id) => {
+        swipe("left");
         sendData(["dislike", id]);
     };
 
     const SwipeButtons = () => {
         return (
             <div className="swipeButtons">
-                <IconButton className="swipeButtons__left" onclick={addDislike}>
+                <IconButton className="swipeButtons__left" onClick={swipe("left")}>
                     <CloseIcon fontSize="large" />
                 </IconButton>
-                <IconButton className="swipeButtons__right" onclick={addLike}>
+                <IconButton className="swipeButtons__right" onClick={swipe("right")}>
                     <FavoriteIcon fontSize="large" />
                 </IconButton>
             </div>
@@ -74,13 +92,34 @@ const Card = () => {
     return (
         <div>
             <div className="cardContainer">
-                {people.map((person) => (
-                    <TinderCard className="swipe" key={person.name} preventSwipe={["up", "down"]}>
-                        <div style={{ backgroundImage: `url(${person.url})` }} className="card">
-                            <h3>{person.name}</h3>
-                        </div>
-                    </TinderCard>
-                ))}
+                {people ? (
+                    people.map((person) =>
+                        alreadyRemoved.includes(person) ? (
+                            console.log("skip")
+                        ) : (
+                            <TinderCard
+                                className="swipe"
+                                key={person.name}
+                                onSwipe={(dir) => swiped(dir, person.id)}
+                                preventSwipe={["up", "down"]}
+                                onCardLeftScreen={() => outOfFrame(person.id)}
+                            >
+                                <div
+                                    style={{
+                                        backgroundImage: person.photo
+                                            ? `url(${person.photo})`
+                                            : `url(https://i.pinimg.com/originals/7a/98/1d/7a981de80cfa0a7aa92f5d523d3509cc.jpg)`,
+                                    }}
+                                    className="card"
+                                >
+                                    <h3>{person.name}</h3>
+                                </div>
+                            </TinderCard>
+                        )
+                    )
+                ) : (
+                    <h3>no other user left...</h3>
+                )}
             </div>
             <div className="swipeButtonContainer">
                 <SwipeButtons />

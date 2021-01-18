@@ -51,11 +51,11 @@ db.once("open", () => {
                 // initialize app with existing messages
                 sendData(["initMsg", res]);
             });
-
         User.find()
             .sort({ _id: 1 })
             .exec((err, res) => {
                 if (err) throw err;
+                console.log(res);
                 // initialize app with existing users
                 sendData(["initCard", res]);
             });
