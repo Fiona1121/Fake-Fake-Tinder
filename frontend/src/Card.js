@@ -9,6 +9,20 @@ import client from "./client";
 const Card = () => {
     const [people, setPeople] = useState([]);
     const [status, setStatus] = useState({});
+    /*setPeople([
+        {
+            name: "Richard Hendricks",
+            url: "https://web.ntnu.edu.tw/~40047006S/hw1/4.jpg",
+        },
+        {
+            name: "Jared Dunn",
+            url: "https://n.sinaimg.cn/sinakd20119/400/w1000h1000/20200413/169e-isehnni9177009.jpg",
+        },
+        {
+            name: "Dinesh Chugtai",
+            url: "https://assets.juksy.com/files/articles/82528/800x_100_w-5b9876010acba.jpg",
+        },
+    ]);*/
 
     client.onmessage = (message) => {
         const { data } = message;

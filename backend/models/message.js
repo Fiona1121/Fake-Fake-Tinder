@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 // Creating a schema, sort of like working with an ORM
@@ -21,4 +21,4 @@ const MessageSchema = new Schema({
 const Message = mongoose.model("message", MessageSchema);
 
 // Exporting table for querying and mutating
-module.exports = Message;
+export default Message;
