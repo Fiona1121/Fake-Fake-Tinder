@@ -6,7 +6,7 @@
   "author": "Fiona <fionawu@genius-bull.com>",
   "license": "MIT",
   "scripts": {
-    "start": "cd frontend yarn start",
+    "start": "cd frontend && yarn start",
     "server": "cd backend && yarn server"
   },
   "dependencies": {
