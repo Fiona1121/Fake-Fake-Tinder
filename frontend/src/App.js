@@ -4,6 +4,7 @@ import Header from "./Header";
 
 import Accountinterface from "./container/accountinterface/accountinterface"
 import Useriinfo from "./container/userinfo/userinfo"
+import Chatscreen  from "./container/chatscreen/chatscreen"
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Card from "./Card";
@@ -18,6 +19,7 @@ function App() {
                     </Route>
                     <Route path="/chats">
                         <Header mode="chat" backButton="/" />
+                        <Chatscreen/>
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" />

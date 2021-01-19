@@ -3,17 +3,21 @@ const Schema = mongoose.Schema;
 
 // Creating a schema, sort of like working with an ORM
 const MessageSchema = new Schema({
-    name: {
-        type: String,
-        required: [true, "Name field is required."],
+    Id: {
+        type: Number,
+        required: [true, "Id field is required."],
     },
     body: {
         type: String,
         required: [true, "Body field is required."],
     },
-    to: {
+    toId: {
         type: String,
         required: [true, "To field is required."],
+    },
+    fromId:{
+        type:String,
+        required:[true, "To field is required."]
     },
 });
 

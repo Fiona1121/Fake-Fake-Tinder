@@ -7,6 +7,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const WebSocket = require("ws");
 
+//import uuidv4 from 'uuid/v4'
 import Image from "./models/image.js";
 import User from "./models/user.js";
 import Message from "./models/message.js";
@@ -32,7 +33,7 @@ db.on("error", (error) => {
 });
 
 db.once("open", () => {
-    console.log("MongoDB connected!");
+    //console.log("MongoDB connected!");
 
     wss.on("connection", (ws) => {
         const sendData = (data) => {
@@ -40,7 +41,7 @@ db.once("open", () => {
         };
 
         const sendStatus = (s) => {
-            sendData(["status", s]);
+            sendData(["status", s]);// s={att1: value1, att2: value2}
         };
 
         Message.find()
@@ -116,6 +117,19 @@ db.once("open", () => {
                 }
                 case "dislike": {
                     break;
+                }
+                case "messageInput": {
+                    console.log("receive: messageInput");
+                    //// payload={"filedata": filedata}
+                    const { fromId,toId,body } = payload;
+                    Message.create({ Id:1,fromId:fromId, toId:toId, body:body }, (err, img) => {
+                        if (err) {
+                            //console.log("img");
+                            console.log(err);
+                            return;
+                        }
+                    });
+                    console.log(payload)
                 }
                 case "clear": {
                     Message.deleteMany({}, () => {
