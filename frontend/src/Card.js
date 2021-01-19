@@ -1,18 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import TinderCard from "react-tinder-card";
 import CloseIcon from "@material-ui/icons/Close";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import IconButton from "@material-ui/core/IconButton";
 import "./Card.css";
 import client from "./client";
+const alreadyRemoved = new Set();
 
 const Card = () => {
     const [people, setPeople] = useState([]);
     const [likedBy, setLikedBy] = useState([]);
     const [like, setLike] = useState([]);
-    const [status, setStatus] = useState({});
+    const [opened, setOpened] = useState(false);
     const [lastDirection, setLastDirection] = useState();
-    const alreadyRemoved = [];
 
     client.onmessage = (message) => {
         const { data } = message;
@@ -27,9 +27,13 @@ const Card = () => {
                 setPeople(() => [...people, ...payload]);
                 break;
             }
-            case "status": {
-                setStatus(payload);
-                break;
+            case "likeList": {
+                setLike(() => payload);
+                console.log(like);
+            }
+            case "likedByList": {
+                setLikedBy(() => payload);
+                console.log(likedBy);
             }
             default:
                 break;
@@ -47,7 +51,7 @@ const Card = () => {
     const swiped = (direction, idToDelete) => {
         console.log("removing: " + idToDelete);
         setLastDirection(direction);
-        alreadyRemoved.push(idToDelete);
+        alreadyRemoved.add(idToDelete);
         console.log(alreadyRemoved);
         if (direction === "left") {
             addDislike(idToDelete);
@@ -58,22 +62,22 @@ const Card = () => {
     };
 
     const swipe = (dir) => {
-        const cardsLeft = people.filter((person) => !alreadyRemoved.includes(person.name));
+        const cardsLeft = people.filter((person) => !alreadyRemoved.has(person.name));
         if (cardsLeft.length) {
             const toBeRemoved = cardsLeft[cardsLeft.length - 1].id; // Find the card object to be removed
             const index = people.map((person) => person.id).indexOf(toBeRemoved); // Find the index of which to make the reference to
-            alreadyRemoved.push(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
+            alreadyRemoved.add(toBeRemoved); // Make sure the next card gets removed next time if this card do not have time to exit the screen
         }
     };
 
     const addLike = (id) => {
-        swipe("right");
-        sendData(["like", id]);
+        //swipe("right");
+        sendData(["like", { id: id }]);
     };
 
     const addDislike = (id) => {
-        swipe("left");
-        sendData(["dislike", id]);
+        //swipe("left");
+        sendData(["dislike", { id: id }]);
     };
 
     const SwipeButtons = () => {
@@ -94,7 +98,7 @@ const Card = () => {
             <div className="cardContainer">
                 {people ? (
                     people.map((person) =>
-                        alreadyRemoved.includes(person) ? (
+                        alreadyRemoved.has(person.id) ? (
                             console.log("skip")
                         ) : (
                             <TinderCard

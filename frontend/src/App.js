@@ -2,8 +2,8 @@ import React from "react";
 import "./App.css";
 import Header from "./Header";
 
-import Accountinterface from "./container/accountinterface/accountinterface"
-import Useriinfo from "./container/userinfo/userinfo"
+import Accountinterface from "./container/accountinterface/accountinterface";
+import Useriinfo from "./container/userinfo/userinfo";
 
 import Loginpage from "./container/login/loginipage/loginpage"
 import Signuppage from "./container/login/signuppage/signuppage"
@@ -24,7 +24,7 @@ function App() {
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" />
-                        <Accountinterface/>   
+                        <Accountinterface />
                     </Route>
 
                     <Route exact path="/">
@@ -33,7 +33,7 @@ function App() {
                     </Route>
 
                     <Route path="/userinfo">
-                        <Useriinfo/> 
+                        <Useriinfo />
                     </Route>
 
                     <Route exact path="/loginpage">
