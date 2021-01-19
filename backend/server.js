@@ -14,7 +14,7 @@ import Message from "./models/message.js";
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
-
+var userID = "1";
 if (!process.env.MONGO_URL) {
     console.error("Missing MONGO_URL!!!");
     process.exit(1);
@@ -51,7 +51,7 @@ db.once("open", () => {
                 // initialize app with existing messages
                 sendData(["initMsg", res]);
             });
-        User.find()
+        User.find({ id: { $not: { $regex: userID } } })
             .sort({ _id: 1 })
             .exec((err, res) => {
                 if (err) throw err;
@@ -77,7 +77,6 @@ db.once("open", () => {
 
         ws.onmessage = (message) => {
             const { data } = message;
-            //console.log(data)
             const [task, payload] = JSON.parse(data);
 
             switch (task) {
@@ -109,12 +108,48 @@ db.once("open", () => {
                     });
                 }
                 case "setUser": {
+                    User.find({ id: userID })
+                        .sort({ _id: 1 })
+                        .exec((err, res) => {
+                            if (err) throw err;
+                            console.log(res);
+                            sendData(["initUser", res]);
+                        });
                     break;
                 }
                 case "like": {
+                    const { id } = payload;
+                    console.log(id);
+                    User.updateOne({ id: userID }, { $addToSet: { like: id } }, (err, res) => {
+                        if (err) throw err;
+                    });
+                    User.updateOne({ id: id }, { $addToSet: { likedBy: userID } }, (err, res) => {
+                        if (err) throw err;
+                    });
+                    User.find({ id: userID }).exec((err, res) => {
+                        if (err) throw err;
+                        console.log(res);
+                        sendData(["likeList", res[0].like]);
+                        sendData(["likedByList", res[0].likedBy]);
+                    });
+                    User.find({ id: id }).exec((err, res) => {
+                        if (err) throw err;
+                        console.log(res);
+                    });
                     break;
                 }
                 case "dislike": {
+                    const { id } = payload;
+                    User.updateOne({ id: userID }, { $addToSet: { dislike: id } }, (err, res) => {
+                        if (err) throw err;
+                    });
+                    User.updateOne({ id: id }, { $addToSet: { dislikeBy: userID } }, (err, res) => {
+                        if (err) throw err;
+                    });
+                    User.find({ id: { $in: [userID, id] } }).exec((err, res) => {
+                        if (err) throw err;
+                        console.log(res);
+                    });
                     break;
                 }
                 case "clear": {
