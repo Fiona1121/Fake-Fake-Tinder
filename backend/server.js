@@ -51,11 +51,11 @@ db.once("open", () => {
                 // initialize app with existing messages
                 sendData(["initMsg", res]);
             });
-
         User.find()
             .sort({ _id: 1 })
             .exec((err, res) => {
                 if (err) throw err;
+                console.log(res);
                 // initialize app with existing users
                 sendData(["initCard", res]);
             });
@@ -82,7 +82,7 @@ db.once("open", () => {
 
             switch (task) {
                 case "sendfile": {
-                    console.log("receive: sendfile");
+                    //console.log("receive: sendfile");
                     //// payload={"filedata": filedata}
                     const { filedata } = payload;
                     Image.create({ buffer: filedata }, (err, img) => {
@@ -94,7 +94,7 @@ db.once("open", () => {
                     });
                 }
                 case "getImageByID": {
-                    console.log("receive: getImageByID");
+                    //console.log("receive: getImageByID");
                     //// payload={"filedata": filedata}
                     const { ImageID } = payload;
                     Image.findById({ _id: ImageID }, (err, image) => {
@@ -108,7 +108,74 @@ db.once("open", () => {
                         sendData(["Image", { imagebuffer: image.buffer }]);
                     });
                 }
+                // case "searchid": {
+                //     console.log("receive: searchid");
+                //     const {id} = payload;
+                //     console.log(id);
+
+                    
+                    
+
+                //     break;
+                // }
                 case "setUser": {
+                    
+                    console.log("receive: setUser");
+                    const {name, sex, id, password, photodata} = payload;
+                    console.log(name, sex, id, password);
+                    User.countDocuments({id: id},(err,number)=>{
+                        console.log('This id has been used ' + number + " times");
+                        if (number >= 1){
+                            sendData(["response_for_signup",{msg: "This id has been used"}]);   
+                        }
+                        else if (number === 0){
+                            //console.log("start to create user")
+                            User.create({ 
+                                id: id,
+                                password: password,
+                                name: name,
+                                sex: sex,
+                                photo: photodata 
+        
+                                }, (err, user) => {
+                                if (err) {
+                                    console.log("user");
+                                    console.log(err);
+                                    return;
+                                }
+                            });
+                            console.log("already create user")
+                            sendData(["response_for_signup",{msg: "Sign up sucessfully"}]);  
+                        }
+                    });                    
+                    break;
+                }
+                case "userLogin": {
+                    
+                    console.log("receive: userLogin");
+                    const {id, password} = payload;
+                    console.log(id, password);
+                    User.countDocuments({id: id},(err,number)=>{
+                        if (number >= 1){
+                            console.log(`user (id: ${id} ) exist`)
+                            User.countDocuments({id: id, password: password},(err,number)=>{
+                                if (number >= 1){
+                                    console.log(`user (id: ${id} ) exist and password is correct`)
+                                    
+                                    sendData(["response_for_login",{msg: 'Welcome'}]);   
+                                }
+                                else if (number === 0){
+                                    console.log(`user (id: ${id} ) exist but password isn't correct`)
+                                    sendData(["response_for_login",{msg: "password is not correct"}]);  
+                                }
+                            });                    
+                            
+                        }
+                        else if (number === 0){
+                            console.log(`user (id: ${id} ) does not exist`)
+                            sendData(["response_for_login",{msg: "id can not be find"}]);  
+                        }
+                    });                    
                     break;
                 }
                 case "like": {

@@ -15,10 +15,6 @@ const UserSchema = new Schema({
         type: String,
         required: [true, "Name field is required."],
     },
-    age: {
-        type: Number,
-        required: [true, "Age field is required."],
-    },
     sex: {
         type: String,
         required: [true, "Sex field is required."],
