@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TinderCard from "react-tinder-card";
 import CloseIcon from "@material-ui/icons/Close";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import IconButton from "@material-ui/core/IconButton";
 import "./Card.css";
 import client from "./client";
+
 const alreadyRemoved = new Set();
 
 const Card = () => {
@@ -21,6 +22,7 @@ const Card = () => {
         switch (task) {
             case "initCard": {
                 setPeople(() => payload);
+                console.log(people);
                 break;
             }
             case "updateCard": {
@@ -30,10 +32,12 @@ const Card = () => {
             case "likeList": {
                 setLike(() => payload);
                 console.log(like);
+                break;
             }
             case "likedByList": {
                 setLikedBy(() => payload);
                 console.log(likedBy);
+                break;
             }
             default:
                 break;
@@ -92,15 +96,18 @@ const Card = () => {
             </div>
         );
     };
+    useEffect(() => {
+        client.onopen = () => {
+            sendData(["getCards", { msg: "get" }]);
+        };
+    }, [opened]);
 
     return (
         <div>
             <div className="cardContainer">
                 {people ? (
                     people.map((person) =>
-                        alreadyRemoved.has(person.id) ? (
-                            console.log("skip")
-                        ) : (
+                        alreadyRemoved.has(person.id) ? null : (
                             <TinderCard
                                 className="swipe"
                                 key={person.name}

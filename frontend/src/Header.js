@@ -1,25 +1,18 @@
 import React from "react";
 import "./Header.css";
-
-//import "./container/accountinterface/accountinterface"
-
-
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"; //account button
 import ForumOutlinedIcon from "@material-ui/icons/ForumOutlined"; //chat button
 import ArrowBackIosOutlinedIcon from "@material-ui/icons/ArrowBackIosOutlined"; //return button
 import ArrowForwardIosOutlinedIcon from "@material-ui/icons/ArrowForwardIosOutlined"; //return button
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone"; //main page button
-
-import SettingsRoundedIcon from '@material-ui/icons/SettingsRounded';// setting button
-
 import { Link, useHistory } from "react-router-dom";
+import client from "./client";
 
 function Header({ mode, backButton }) {
     const history = useHistory();
     return (
         <div className="header">
-            
             {mode === "chat" ? (
                 <IconButton onClick={() => history.replace(backButton)}>
                     <ArrowBackIosOutlinedIcon fontSize="large" className="header__icon" />
@@ -33,7 +26,7 @@ function Header({ mode, backButton }) {
             )}
 
             <Link to="/">
-                <IconButton>
+                <IconButton onClick={() => client.send(JSON.stringify(["getCards", { msg: "get" }]))}>
                     <FavoriteTwoToneIcon style={{ fontSize: 45 }} color="secondary" className="header__logo" />
                 </IconButton>
             </Link>
@@ -49,7 +42,6 @@ function Header({ mode, backButton }) {
                     </IconButton>
                 </Link>
             )}
-            
         </div>
     );
 }

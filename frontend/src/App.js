@@ -5,8 +5,9 @@ import Header from "./Header";
 import Accountinterface from "./container/accountinterface/accountinterface";
 import Useriinfo from "./container/userinfo/userinfo";
 
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link, useLocation } from "react-router-dom";
 import Card from "./Card";
+var open = false;
 
 function App() {
     return (
