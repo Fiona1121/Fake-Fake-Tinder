@@ -22,7 +22,6 @@ const Card = () => {
         switch (task) {
             case "initCard": {
                 setPeople(() => payload);
-                console.log(people);
                 break;
             }
             case "updateCard": {
@@ -31,12 +30,10 @@ const Card = () => {
             }
             case "likeList": {
                 setLike(() => payload);
-                console.log(like);
                 break;
             }
             case "likedByList": {
                 setLikedBy(() => payload);
-                console.log(likedBy);
                 break;
             }
             default:
