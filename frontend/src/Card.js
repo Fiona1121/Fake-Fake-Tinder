@@ -110,7 +110,7 @@ const Card = () => {
                         alreadyRemoved.has(person.id) ? null : (
                             <TinderCard
                                 className="swipe"
-                                key={person.name}
+                                key={person.id}
                                 onSwipe={(dir) => swiped(dir, person.id)}
                                 preventSwipe={["up", "down"]}
                                 onCardLeftScreen={() => outOfFrame(person.id)}
