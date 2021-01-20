@@ -1,24 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TinderCard from "react-tinder-card";
 import CloseIcon from "@material-ui/icons/Close";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import IconButton from "@material-ui/core/IconButton";
 import "./Card.css";
-import client from "./client";
+import client from "../../client";
+
 const alreadyRemoved = new Set();
 
 const Card = () => {
     const [people, setPeople] = useState([]);
     const [likedBy, setLikedBy] = useState([]);
     const [like, setLike] = useState([]);
-    const [opened, setOpened] = useState(false);
-    const [lastDirection, setLastDirection] = useState();
+    const [isLogin, setIsLogin] = useState(false);
+    const [user, setUser] = useState({});
+
+    const sendData = (data) => {
+        client.send(JSON.stringify(data));
+    };
 
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
 
         switch (task) {
+            case "setUser": {
+                //console.log("set user");
+                setIsLogin(true);
+                setUser({ id: payload.id });
+                setLike(payload.like);
+                setLikedBy(payload.likedBy);
+                sendData(["getCards", { userID: user.id }]);
+                break;
+            }
             case "initCard": {
                 setPeople(() => payload);
                 break;
@@ -29,19 +43,15 @@ const Card = () => {
             }
             case "likeList": {
                 setLike(() => payload);
-                console.log(like);
+                break;
             }
             case "likedByList": {
                 setLikedBy(() => payload);
-                console.log(likedBy);
+                break;
             }
             default:
                 break;
         }
-    };
-
-    const sendData = (data) => {
-        client.send(JSON.stringify(data));
     };
 
     const outOfFrame = (id) => {
@@ -50,13 +60,13 @@ const Card = () => {
 
     const swiped = (direction, idToDelete) => {
         console.log("removing: " + idToDelete);
-        setLastDirection(direction);
         alreadyRemoved.add(idToDelete);
         console.log(alreadyRemoved);
         if (direction === "left") {
             addDislike(idToDelete);
         }
         if (direction === "right") {
+            if (likedBy.includes(idToDelete)) console.log("match!");
             addLike(idToDelete);
         }
     };
@@ -72,14 +82,15 @@ const Card = () => {
 
     const addLike = (id) => {
         //swipe("right");
-        sendData(["like", { id: id }]);
+        sendData(["like", { userID: user.id, id: id }]);
     };
 
     const addDislike = (id) => {
         //swipe("left");
-        sendData(["dislike", { id: id }]);
+        sendData(["dislike", { userID: user.id, id: id }]);
     };
 
+    /*
     const SwipeButtons = () => {
         return (
             <div className="swipeButtons">
@@ -92,42 +103,46 @@ const Card = () => {
             </div>
         );
     };
+    */
 
     return (
         <div>
-            <div className="cardContainer">
-                {people ? (
-                    people.map((person) =>
-                        alreadyRemoved.has(person.id) ? (
-                            console.log("skip")
-                        ) : (
-                            <TinderCard
-                                className="swipe"
-                                key={person.name}
-                                onSwipe={(dir) => swiped(dir, person.id)}
-                                preventSwipe={["up", "down"]}
-                                onCardLeftScreen={() => outOfFrame(person.id)}
-                            >
-                                <div
-                                    style={{
-                                        backgroundImage: person.photo
-                                            ? `url(${person.photo})`
-                                            : `url(https://i.pinimg.com/originals/7a/98/1d/7a981de80cfa0a7aa92f5d523d3509cc.jpg)`,
-                                    }}
-                                    className="card"
+            {isLogin ? (
+                <div className="cardContainer">
+                    {people ? (
+                        people.map((person) =>
+                            alreadyRemoved.has(person.id) ? null : (
+                                <TinderCard
+                                    className="swipe"
+                                    key={person.id}
+                                    onSwipe={(dir) => swiped(dir, person.id)}
+                                    preventSwipe={["up", "down"]}
+                                    onCardLeftScreen={() => outOfFrame(person.id)}
                                 >
-                                    <h3>{person.name}</h3>
-                                </div>
-                            </TinderCard>
+                                    <div
+                                        style={{
+                                            backgroundImage: person.photo
+                                                ? `url(${person.photo})`
+                                                : `url(https://i.pinimg.com/originals/7a/98/1d/7a981de80cfa0a7aa92f5d523d3509cc.jpg)`,
+                                        }}
+                                        className="card"
+                                    >
+                                        <h3>{person.name}</h3>
+                                    </div>
+                                </TinderCard>
+                            )
                         )
-                    )
-                ) : (
-                    <h3>no other user left...</h3>
-                )}
-            </div>
-            <div className="swipeButtonContainer">
-                <SwipeButtons />
-            </div>
+                    ) : (
+                        <div className="info">
+                            <h3>no other user left...</h3>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="info">
+                    <h3>Please login in or sign up!</h3>
+                </div>
+            )}
         </div>
     );
 };

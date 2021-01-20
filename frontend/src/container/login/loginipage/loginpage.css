@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+}
+form {
+    padding: 30px;
+}
+.box {
+    background-color: rgba(0, 139, 139, 0.55);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+    border-color: #d2d2d2;
+    border-width: 5px;
+    color: #ffffff;
+    box-shadow: -5px -5px 9px #ccddff;
+}

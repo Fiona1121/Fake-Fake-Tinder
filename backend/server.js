@@ -7,15 +7,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const WebSocket = require("ws");
 
-//import uuidv4 from 'uuid/v4'
+import Message from "./models/message.js";
 import Image from "./models/image.js";
 import User from "./models/user.js";
-import Message from "./models/message.js";
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
-var userID = "3";
 if (!process.env.MONGO_URL) {
     console.error("Missing MONGO_URL!!!");
     process.exit(1);
@@ -43,7 +41,6 @@ db.once("open", () => {
         const sendStatus = (s) => {
             sendData(["status", s]);// s={att1: value1, att2: value2}
         };
-
         Message.find()
             .limit(100)
             .sort({ _id: 1 })
@@ -51,13 +48,6 @@ db.once("open", () => {
                 if (err) throw err;
                 //console.log(res)
                 sendData(["initMsg", res]);
-            });
-        User.find({ id: { $not: { $regex: userID } } })
-            .sort({ _id: 1 })
-            .exec((err, res) => {
-                if (err) throw err;
-                //console.log(res);
-                sendData(["initCard", res]);
             });
 
         ws.onmessage = (message) => {
@@ -100,69 +90,93 @@ db.once("open", () => {
                 //     break;
                 // }
                 case "setUser": {
-                    
                     console.log("receive: setUser");
-                    const {name, sex, id, password, photodata} = payload;
+                    const { name, sex, id, password, photodata } = payload;
                     console.log(name, sex, id, password);
-                    User.countDocuments({id: id},(err,number)=>{
-                        console.log('This id has been used ' + number + " times");
-                        if (number >= 1){
-                            sendData(["response_for_signup",{msg: "This id has been used"}]);   
-                        }
-                        else if (number === 0){
+                    User.countDocuments({ id: id }, (err, number) => {
+                        console.log("This id has been used " + number + " times");
+                        if (number >= 1) {
+                            sendData(["response_for_signup", { msg: "This id has been used" }]);
+                        } else if (number === 0) {
                             //console.log("start to create user")
-                            User.create({ 
-                                id: id,
-                                password: password,
-                                name: name,
-                                sex: sex,
-                                photo: photodata 
-        
-                                }, (err, user) => {
-                                if (err) {
-                                    console.log("user");
-                                    console.log(err);
-                                    return;
+                            User.create(
+                                {
+                                    id: id,
+                                    password: password,
+                                    name: name,
+                                    sex: sex,
+                                    photo: photodata,
+                                },
+                                (err, user) => {
+                                    if (err) {
+                                        console.log("user");
+                                        console.log(err);
+                                        return;
+                                    }
                                 }
+                            );
+                            console.log("already create user");
+                            sendData(["response_for_signup", { msg: "Sign up sucessfully" }]);
+                            User.find({ id: id }).exec((err, res) => {
+                                if (err) throw err;
+                                //console.log(res);
+                                sendData(["setUser", res]);
                             });
-                            console.log("already create user")
-                            sendData(["response_for_signup",{msg: "Sign up sucessfully"}]);  
-                            send
                         }
-                    });                    
+                    });
                     break;
                 }
                 case "userLogin": {
-                    
                     console.log("receive: userLogin");
-                    const {id, password} = payload;
+                    const { id, password } = payload;
                     console.log(id, password);
-                    User.countDocuments({id: id},(err,number)=>{
-                        if (number >= 1){
-                            console.log(`user (id: ${id} ) exist`)
-                            User.countDocuments({id: id, password: password},(err,number)=>{
-                                if (number >= 1){
-                                    console.log(`user (id: ${id} ) exist and password is correct`)
-                                    
-                                    sendData(["response_for_login",{msg: 'Welcome'}]);   
+                    User.countDocuments({ id: id }, (err, number) => {
+                        if (number >= 1) {
+                            console.log(`user (id: ${id} ) exist`);
+                            User.countDocuments({ id: id, password: password }, (err, number) => {
+                                if (number >= 1) {
+                                    console.log(`user (id: ${id} ) exist and password is correct`);
+
+                                    sendData(["response_for_login", { msg: "Welcome" }]);
+                                    User.find({ id: id }).exec((err, res) => {
+                                        if (err) throw err;
+                                        //console.log(res);
+                                        sendData(["setUser", res]);
+                                    });
+                                } else if (number === 0) {
+                                    console.log(`user (id: ${id} ) exist but password isn't correct`);
+                                    sendData(["response_for_login", { msg: "password is not correct" }]);
                                 }
-                                else if (number === 0){
-                                    console.log(`user (id: ${id} ) exist but password isn't correct`)
-                                    sendData(["response_for_login",{msg: "password is not correct"}]);  
-                                }
-                            });                    
-                            
+                            });
+                        } else if (number === 0) {
+                            console.log(`user (id: ${id} ) does not exist`);
+                            sendData(["response_for_login", { msg: "id can not be find" }]);
                         }
-                        else if (number === 0){
-                            console.log(`user (id: ${id} ) does not exist`)
-                            sendData(["response_for_login",{msg: "id can not be find"}]);  
-                        }
-                    });                    
+                    });
                     break;
                 }
+                case "getCards": {
+                    const { userID } = payload;
+                    User.find({ id: { $not: { $regex: toString(userID) } } })
+                        .sort({ _id: 1 })
+                        .exec((err, res) => {
+                            if (err) throw err;
+                            console.log(res);
+                            // initialize app with existing users
+                            sendData(["initCard", res]);
+                        });
+                }
+                case "getUser": {
+                    const { userID } = payload;
+                    User.find({ id: userID }).exec((err, res) => {
+                        if (err) throw err;
+                        //console.log(res);
+                        sendData(["setUser", res]);
+                    });
+                }
                 case "like": {
-                    const { id } = payload;
-                    console.log(id);
+                    const { userID, id } = payload;
+                    //console.log(id);
                     User.updateOne({ id: userID }, { $addToSet: { like: id } }, (err, res) => {
                         if (err) throw err;
                     });
@@ -177,12 +191,12 @@ db.once("open", () => {
                     });
                     User.find({ id: id }).exec((err, res) => {
                         if (err) throw err;
-                        console.log(res);
+                        //console.log(res);
                     });
                     break;
                 }
                 case "dislike": {
-                    const { id } = payload;
+                    const { userID, id } = payload;
                     User.updateOne({ id: userID }, { $addToSet: { dislike: id } }, (err, res) => {
                         if (err) throw err;
                     });
@@ -191,7 +205,7 @@ db.once("open", () => {
                     });
                     User.find({ id: { $in: [userID, id] } }).exec((err, res) => {
                         if (err) throw err;
-                        console.log(res);
+                        //console.log(res);
                     });
                     break;
                 }

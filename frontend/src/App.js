@@ -7,11 +7,11 @@ import Useriinfo from "./container/userinfo/userinfo"
 import Chatscreen  from "./container/chatscreen/chatscreen"
 
 
-import Loginpage from "./container/login/loginipage/loginpage"
-import Signuppage from "./container/login/signuppage/signuppage"
+import Loginpage from "./container/login/loginipage/loginpage";
+import Signuppage from "./container/login/signuppage/signuppage";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Card from "./Card";
+import Card from "./container/card/Card";
 
 function App() {
     return (
@@ -32,7 +32,7 @@ function App() {
 
                     <Route exact path="/">
                         <Header />
-                        <Card/>
+                        <Card />
                     </Route>
 
                     <Route path="/userinfo">
@@ -40,13 +40,12 @@ function App() {
                     </Route>
 
                     <Route exact path="/loginpage">
-                        <Loginpage/> 
+                        <Loginpage />
                     </Route>
 
                     <Route exact path="/signuppage">
-                        <Signuppage/> 
+                        <Signuppage />
                     </Route>
-                    
                 </Switch>
             </Router>
         </div>
