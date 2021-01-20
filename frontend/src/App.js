@@ -4,6 +4,7 @@ import Header from "./Header";
 import client from "./client";
 import Accountinterface from "./container/accountinterface/accountinterface";
 import Useriinfo from "./container/userinfo/userinfo";
+import Chatscreen from "./container/chatscreen/chatscreen";
 
 import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
@@ -32,11 +33,9 @@ function App() {
         <div className="App">
             <Router>
                 <Switch>
-                    <Route path="/chats/:person">
-                        <Header mode="chat" backButton="/chats" userID={user.id} />
-                    </Route>
                     <Route path="/chats">
                         <Header mode="chat" backButton="/" userID={user.id} />
+                        <Chatscreen />
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" userID={user.id} />
@@ -44,7 +43,7 @@ function App() {
                     </Route>
 
                     <Route exact path="/">
-                        <Header />
+                        <Header mode="main" backButton="" userID={user.id} />
                         <Card userID={user.id} />
                     </Route>
 
@@ -54,12 +53,10 @@ function App() {
                     </Route>
 
                     <Route exact path="/loginpage">
-                        <Header mode="account" backButton="/" userID={user.id} />
                         <Loginpage />
                     </Route>
 
                     <Route exact path="/signuppage">
-                        <Header mode="account" backButton="/" userID={user.id} />
                         <Signuppage />
                     </Route>
                 </Switch>

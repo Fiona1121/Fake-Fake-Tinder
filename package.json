@@ -1,0 +1,15 @@
+{
+  "name": "109-1-Web-Project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Fiona1121/109-1-Web-Project.git",
+  "author": "Fiona <fionawu@genius-bull.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "cd frontend && yarn start",
+    "server": "cd backend && yarn server"
+  },
+  "dependencies": {
+    "firebase": "^8.2.1"
+  }
+}

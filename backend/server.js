@@ -39,22 +39,25 @@ db.once("open", () => {
         };
 
         const sendStatus = (s) => {
-            sendData(["status", s]);
+            sendData(["status", s]); // s={att1: value1, att2: value2}
         };
-        Message.find()
-            .limit(100)
-            .sort({ _id: 1 })
-            .exec((err, res) => {
-                if (err) throw err;
-                //console.log(res)
-                sendData(["initMsg", res]);
-            });
 
         ws.onmessage = (message) => {
             const { data } = message;
             const [task, payload] = JSON.parse(data);
 
             switch (task) {
+                case "msgInit": {
+                    Message.find()
+                        .limit(100)
+                        .sort({ _id: 1 })
+                        .exec((err, res) => {
+                            if (err) throw err;
+                            console.log(res);
+                            sendData(["initMsg", res]);
+                        });
+                    console.log("init");
+                }
                 case "sendfile": {
                     //console.log("receive: sendfile");
                     //// payload={"filedata": filedata}
@@ -183,35 +186,44 @@ db.once("open", () => {
                 case "like": {
                     const { userID, id } = payload;
                     //console.log(id);
-                    User.updateOne({ id: userID }, { $addToSet: { like: id } }, (err, res) => {
-                        if (err) throw err;
-                    });
-                    User.updateOne({ id: id }, { $addToSet: { likedBy: userID } }, (err, res) => {
-                        if (err) throw err;
-                    });
-                    User.find({ id: userID }).exec((err, res) => {
-                        if (err) throw err;
-                        console.log(res);
-                        sendData(["likeList", res[0].like]);
-                        sendData(["likedByList", res[0].likedBy]);
-                    });
-                    User.find({ id: id }).exec((err, res) => {
-                        if (err) throw err;
-                        //console.log(res);
-                    });
+                    if (userID) {
+                        User.updateOne({ id: userID }, { $addToSet: { like: id } }, (err, res) => {
+                            if (err) throw err;
+                        });
+                        User.updateOne({ id: id }, { $addToSet: { likedBy: userID } }, (err, res) => {
+                            if (err) throw err;
+                        });
+                        User.find({ id: userID }).exec((err, res) => {
+                            if (err) throw err;
+                            console.log(res);
+                            sendData(["likeList", res[0].like]);
+                            sendData(["likedByList", res[0].likedBy]);
+                        });
+                        User.find({ id: id }).exec((err, res) => {
+                            if (err) throw err;
+                            //console.log(res);
+                        });
+                    }
                     break;
                 }
                 case "dislike": {
                     const { userID, id } = payload;
-                    User.updateOne({ id: userID }, { $addToSet: { dislike: id } }, (err, res) => {
-                        if (err) throw err;
-                    });
-                    User.updateOne({ id: id }, { $addToSet: { dislikeBy: userID } }, (err, res) => {
-                        if (err) throw err;
-                    });
-                    User.find({ id: { $in: [userID, id] } }).exec((err, res) => {
-                        if (err) throw err;
-                        //console.log(res);
+                    if (userID) {
+                        User.updateOne({ id: userID }, { $addToSet: { dislike: id } }, (err, res) => {
+                            if (err) throw err;
+                        });
+                        User.updateOne({ id: id }, { $addToSet: { dislikeBy: userID } }, (err, res) => {
+                            if (err) throw err;
+                        });
+                        User.find({ id: { $in: [userID, id] } }).exec((err, res) => {
+                            //console.log(res);
+                        });
+                    }
+                    break;
+                }
+                case "messageInput": {
+                    Message.create(payload, function (err, res) {
+                        sendData(["resOfSendMessage", [payload]]);
                     });
                     break;
                 }

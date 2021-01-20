@@ -38,47 +38,58 @@ function Header({ mode, backButton, userID }) {
         sendData(["getCards", { userID: user.id }]);
     };
     return (
-        <div className="header">
-            {mode === "chat" ? (
-                <IconButton
-                    onClick={() => {
-                        history.replace(backButton);
-                        reloadMain();
-                    }}
-                >
-                    <ArrowBackIosOutlinedIcon fontSize="large" className="header__icon" />
-                </IconButton>
-            ) : (
-                <Link to="/accounts">
-                    <IconButton>
-                        <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
+        <>
+            <div className="header">
+                {mode === "chat" ? (
+                    <IconButton
+                        onClick={() => {
+                            history.replace(backButton);
+                            reloadMain();
+                        }}
+                    >
+                        <ArrowBackIosOutlinedIcon fontSize="large" className="header__icon" />
+                    </IconButton>
+                ) : (
+                    <div>
+                        <Link to="/accounts">
+                            <IconButton>
+                                <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
+                            </IconButton>
+                        </Link>
+                    </div>
+                )}
+
+                <Link to="/">
+                    <IconButton onClick={() => sendData(["getCards", { userID: user.id }])}>
+                        <FavoriteTwoToneIcon style={{ fontSize: 45 }} color="secondary" className="header__logo" />
                     </IconButton>
                 </Link>
-            )}
 
-            <Link to="/">
-                <IconButton onClick={() => sendData(["getCards", { userID: user.id }])}>
-                    <FavoriteTwoToneIcon style={{ fontSize: 45 }} color="secondary" className="header__logo" />
-                </IconButton>
-            </Link>
-
-            {mode === "account" ? (
-                <IconButton
-                    onClick={() => {
-                        history.replace(backButton);
-                        reloadMain();
-                    }}
-                >
-                    <ArrowForwardIosOutlinedIcon fontSize="large" className="header__icon" />
-                </IconButton>
-            ) : (
-                <Link to="/chats">
-                    <IconButton>
-                        <ForumOutlinedIcon className="header__icon" fontSize="large" />
+                {mode === "account" ? (
+                    <IconButton
+                        onClick={() => {
+                            history.replace(backButton);
+                            reloadMain();
+                        }}
+                    >
+                        <ArrowForwardIosOutlinedIcon fontSize="large" className="header__icon" />
                     </IconButton>
-                </Link>
-            )}
-        </div>
+                ) : (
+                    <Link to={user.id ? "/chats" : "/"}>
+                        <IconButton
+                            onClick={() => {
+                                if (!user.id) {
+                                    alert("Please login!");
+                                }
+                            }}
+                        >
+                            <ForumOutlinedIcon className="header__icon" fontSize="large" />
+                        </IconButton>
+                    </Link>
+                )}
+            </div>
+            <p>{userID}</p>
+        </>
     );
 }
 

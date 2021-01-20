@@ -54,7 +54,6 @@ function Userinfo(){
         
     };
 
-    
     return(
         <div className="App-userinfo">
             <input 
