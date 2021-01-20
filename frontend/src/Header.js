@@ -50,13 +50,13 @@ function Header({ mode, backButton, userID }) {
                         <ArrowBackIosOutlinedIcon fontSize="large" className="header__icon" />
                     </IconButton>
                 ) : (
-                    <div>
-                        <Link to="/accounts">
-                            <IconButton>
-                                <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
-                            </IconButton>
-                        </Link>
-                    </div>
+                    <Link to="/accounts">
+                        <IconButton onClick={() => sendData(["Accountinterface_getUser", { userID: "891206" }])}>
+                            {" "}
+                            {/* 我的db裡有891206的id*/}
+                            <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
+                        </IconButton>
+                    </Link>
                 )}
 
                 <Link to="/">

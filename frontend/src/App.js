@@ -5,6 +5,7 @@ import client from "./client";
 import Accountinterface from "./container/accountinterface/accountinterface";
 import Useriinfo from "./container/userinfo/userinfo";
 import Chatscreen from "./container/chatscreen/chatscreen";
+import Uploadimagetest from "./container/uploadimagetest/uploadimagetest"; //用不到
 
 import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
@@ -39,17 +40,12 @@ function App() {
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" userID={user.id} />
-                        <Accountinterface />
+                        <Accountinterface user={user} />
                     </Route>
 
                     <Route exact path="/">
                         <Header mode="main" backButton="" userID={user.id} />
                         <Card userID={user.id} />
-                    </Route>
-
-                    <Route path="/userinfo">
-                        <Header mode="account" backButton="/" userID={user.id} />
-                        <Useriinfo />
                     </Route>
 
                     <Route exact path="/loginpage">

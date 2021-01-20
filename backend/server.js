@@ -64,7 +64,7 @@ db.once("open", () => {
                     const { filedata } = payload;
                     Image.create({ buffer: filedata }, (err, img) => {
                         if (err) {
-                            console.log("img");
+                            //console.log("img");
                             console.log(err);
                             return;
                         }
@@ -85,13 +85,13 @@ db.once("open", () => {
                         sendData(["Image", { imagebuffer: image.buffer }]);
                     });
                 }
-                // case "searchid": {
-                //     console.log("receive: searchid");
-                //     const {id} = payload;
-                //     console.log(id);
+                //for testing by Yu
 
-                //     break;
-                // }
+                case "sendtest": {
+                    const { id, body } = payload;
+                    console.log("receive sendtest");
+                    console.log(payload);
+                }
                 case "setUser": {
                     console.log("receive: setUser");
                     const { name, sex, id, password, photodata } = payload;
@@ -124,6 +124,7 @@ db.once("open", () => {
                                 if (err) throw err;
                                 //console.log(res);
                                 sendData(["setUser", res]);
+                                // sendData(["Accountinterface_setUser",res]) // res is user >>Accountinterface_setUser
                             });
                         }
                     });
@@ -144,7 +145,9 @@ db.once("open", () => {
                                     User.find({ id: id }).exec((err, res) => {
                                         if (err) throw err;
                                         //console.log(res);
-                                        sendData(["setUser", res]);
+                                        console.log(`user(id: ${id}) log in`);
+                                        sendData(["setUser", res]); // res is user
+                                        // sendData(["Accountinterface_setUser", res]);// res is user >>Accountinterface_setUser
                                     });
                                 } else if (number === 0) {
                                     console.log(`user (id: ${id} ) exist but password isn't correct`);
@@ -168,12 +171,13 @@ db.once("open", () => {
                         .sort({ _id: 1 })
                         .exec((err, res) => {
                             if (err) throw err;
-                            console.log(res);
+                            //console.log(res);
                             // initialize app with existing users
                             sendData(["initCard", res]);
                         });
                 }
                 case "getUser": {
+                    console.log("receive: getuser");
                     const { userID } = payload;
                     if (userID) {
                         User.find({ id: userID }).exec((err, res) => {
@@ -183,9 +187,84 @@ db.once("open", () => {
                         });
                     }
                 }
+                case "Accountinterface_getUser": {
+                    console.log("receive: Accountinterface_getUser");
+                    console.log(payload);
+                    const { userID } = payload;
+                    User.find({ id: userID }).exec((err, res) => {
+                        if (err) throw err;
+                        //console.log(res);
+                        sendData(["Accountinterface_setUser", res]);
+                    });
+                }
+
+                case "Accountinterface_updateUser": {
+                    console.log("receive: Accountinterface_updateUser");
+                    console.log(payload);
+                    const { id, user_id, infotobeupdate, newvalue } = payload;
+                    const filter111 = { _id: user_id };
+                    const filter = { id: id };
+
+                    if (infotobeupdate === "name") {
+                        console.log("update name");
+
+                        const update = { name: newvalue };
+
+                        User.findByIdAndUpdate(user_id, update, (err, user) => {
+                            console.log(err);
+                            User.find({ _id: user._id }).exec((err, res) => {
+                                if (err) throw err;
+                                //console.log(res);
+                                sendData(["Accountinterface_setUser", res]);
+                            });
+                        });
+                    } else if (infotobeupdate === "sex") {
+                        const update = { sex: newvalue };
+                        User.findByIdAndUpdate(user_id, update, (err, user) => {
+                            console.log(err);
+                            User.find({ _id: user._id }).exec((err, res) => {
+                                if (err) throw err;
+                                //console.log(res);
+                                sendData(["Accountinterface_setUser", res]);
+                            });
+                        });
+                    } else if (infotobeupdate === "password") {
+                        const update = { password: newvalue };
+                        User.findByIdAndUpdate(user_id, update, (err, user) => {
+                            console.log(err);
+                            User.find({ _id: user._id }).exec((err, res) => {
+                                if (err) throw err;
+                                //console.log(res);
+                                sendData(["Accountinterface_setUser", res]);
+                            });
+                        });
+                    } else if (infotobeupdate === "id") {
+                        //const update = {'password':newvalue }
+
+                        User.countDocuments({ id: newvalue }, (err, number) => {
+                            console.log("This id has been used " + number + " times");
+                            if (number >= 1) {
+                                //sendData(["response_for_signup", { msg: "This id has been used" }]);
+                            } else if (number === 0) {
+                                //console.log("start to create user")
+                                const update = { id: newvalue };
+                                User.findByIdAndUpdate(user_id, update, (err, user) => {
+                                    console.log(err);
+                                    User.find({ _id: user._id }).exec((err, res) => {
+                                        if (err) throw err;
+                                        //console.log(res);
+                                        sendData(["Accountinterface_setUser", res]);
+                                    });
+                                });
+                                console.log("already update user id");
+                            }
+                        });
+                    }
+                }
                 case "like": {
                     const { userID, id } = payload;
                     //console.log(id);
+
                     if (userID) {
                         User.updateOne({ id: userID }, { $addToSet: { like: id } }, (err, res) => {
                             if (err) throw err;
@@ -195,7 +274,7 @@ db.once("open", () => {
                         });
                         User.find({ id: userID }).exec((err, res) => {
                             if (err) throw err;
-                            console.log(res);
+                            //console.log(res);
                             sendData(["likeList", res[0].like]);
                             sendData(["likedByList", res[0].likedBy]);
                         });
@@ -204,6 +283,7 @@ db.once("open", () => {
                             //console.log(res);
                         });
                     }
+
                     break;
                 }
                 case "dislike": {
@@ -216,11 +296,12 @@ db.once("open", () => {
                             if (err) throw err;
                         });
                         User.find({ id: { $in: [userID, id] } }).exec((err, res) => {
-                            //console.log(res);
+                            if (err) throw err; //console.log(res);
                         });
                     }
                     break;
                 }
+
                 case "messageInput": {
                     Message.create(payload, function (err, res) {
                         sendData(["resOfSendMessage", [payload]]);
