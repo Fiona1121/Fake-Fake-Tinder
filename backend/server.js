@@ -155,6 +155,10 @@ db.once("open", () => {
                     });
                     break;
                 }
+                case "initHeader": {
+                    const { userID } = payload;
+                    sendData(["initHeader", { id: userID }]);
+                }
                 case "getCards": {
                     const { userID } = payload;
                     User.find({ id: { $not: { $regex: toString(userID) } } })
@@ -168,11 +172,13 @@ db.once("open", () => {
                 }
                 case "getUser": {
                     const { userID } = payload;
-                    User.find({ id: userID }).exec((err, res) => {
-                        if (err) throw err;
-                        //console.log(res);
-                        sendData(["setUser", res]);
-                    });
+                    if (userID) {
+                        User.find({ id: userID }).exec((err, res) => {
+                            if (err) throw err;
+                            //console.log(res);
+                            sendData(["setUser", res]);
+                        });
+                    }
                 }
                 case "like": {
                     const { userID, id } = payload;
