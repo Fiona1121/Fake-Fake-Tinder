@@ -16,6 +16,13 @@ const Userinfo = (props) => {
     const [infoinput,setInfoinput] = useState('')
     const [placeholder,setPlaceholder] = useState("")
 
+
+    const setinfo = (info,originalvalue)=>{//info like: name, sex ... 
+        //console.log()                    // originvalue like: Toby,male
+        setInfo_be_setting(info)
+        setPlaceholder(originalvalue)
+    }
+
     const sendData = (data) => {
         client.send(JSON.stringify( data ))
     }
@@ -25,17 +32,13 @@ const Userinfo = (props) => {
 
 
 
-    const setinfo = (info,originalvalue)=>{
-        //console.log()
-        setInfo_be_setting(info)
-        setPlaceholder(originalvalue)
-    }
+    
     const updateinfo = () => {
-        console.log(infoinput)
-        
-        if (info_be_setting=== 'name'){
-            //sendupdateinfo({user_id: user._id, infotobeupdate:"name",newvalue: infoinput})
-        }
+        //console.log(infoinput)
+        console.log('updateinfo')
+       
+
+        sendupdateinfo({user_id: user._id,id:user.id, infotobeupdate: info_be_setting ,newvalue: infoinput})
 
 
         setInfo_be_setting('none')

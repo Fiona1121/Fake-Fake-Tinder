@@ -24,14 +24,30 @@ function Accountinterface() {
         switch (task) {
             case "Accountinterface_setUser": {
                 console.log("receive: Accountinterface_setUser");
-                if(payload[0] !== undefined){
-                    const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
-                    setUser({id:id,name:name,photo:photo,sex:sex,password:password})
-                }   
+                console.log(payload)
+                console.log(payload._id)
+                
+                //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
+                //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
+                   
+                //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
+                setUser(payload[0])
+            
+                break;
+            }
+            case "Accountinterface_updateUser": {
+                console.log("receive: Accountinterface_updateUser");
+                //console.log(payload)// is old one
+                const {_id} = payload;
+
+                //sendData(['Accountinterface_getUser',{ userID: }])
+                
+                //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
+                //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
+                   
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
                 //setUser(payload[0])
-                //console.log(payload)
-                //console.log(id, name,sex)
+            
                 break;
             }
             case "Image": {
@@ -59,6 +75,7 @@ function Accountinterface() {
 
     const sendtest = () => {
         //console.log('sendtest: { id: "fromid", body:"testbody"}')
+        console.log('sendtest: { userID: "891206"}')
         sendData(['Accountinterface_getUser',{ userID: "891206"}])
     }
     // const sendtest2 = () => {
