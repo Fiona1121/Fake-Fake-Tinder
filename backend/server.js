@@ -7,14 +7,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const WebSocket = require("ws");
 
+import Message from "./models/message.js";
 import Image from "./models/image.js";
 import User from "./models/user.js";
-import Message from "./models/message.js";
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
-var userID = "3";
 if (!process.env.MONGO_URL) {
     console.error("Missing MONGO_URL!!!");
     process.exit(1);
@@ -42,7 +41,6 @@ db.once("open", () => {
         const sendStatus = (s) => {
             sendData(["status", s]);
         };
-
         Message.find()
             .limit(100)
             .sort({ _id: 1 })
@@ -50,14 +48,6 @@ db.once("open", () => {
                 if (err) throw err;
                 //console.log(res)
                 sendData(["initMsg", res]);
-            });
-
-        User.find({ id: userID })
-            .sort({ _id: 1 })
-            .exec((err, res) => {
-                if (err) throw err;
-                //console.log(res);
-                sendData(["initCard", res]);
             });
 
         ws.onmessage = (message) => {
@@ -71,7 +61,7 @@ db.once("open", () => {
                     const { filedata } = payload;
                     Image.create({ buffer: filedata }, (err, img) => {
                         if (err) {
-                            console.log("img");
+                            //console.log("img");
                             console.log(err);
                             return;
                         }
@@ -93,10 +83,14 @@ db.once("open", () => {
                     });
                 }
                 //for testing by Yu
+                
                 case "sendtest": {
+
                     const {id,body}=payload
+                    console.log("receive sendtest")
                     console.log(payload)
-                    sendData([`broadcast${id}`,{ id:id, body:body }])
+                    
+                    
                 } 
                 case "setUser": {
                     console.log("receive: setUser");
@@ -126,7 +120,12 @@ db.once("open", () => {
                             );
                             console.log("already create user");
                             sendData(["response_for_signup", { msg: "Sign up sucessfully" }]);
-                            
+                            User.find({ id: id }).exec((err, res) => {
+                                if (err) throw err;
+                                //console.log(res);
+                                sendData(["setUser", res]);
+                                sendData(["Accountinterface_setUser",res])
+                            });
                         }
                     });
                     break;
@@ -143,6 +142,13 @@ db.once("open", () => {
                                     console.log(`user (id: ${id} ) exist and password is correct`);
 
                                     sendData(["response_for_login", { msg: "Welcome" }]);
+                                    User.find({ id: id }).exec((err, res) => {
+                                        if (err) throw err;
+                                        //console.log(res);
+                                        console.log(`user(id: ${id}) log in`)
+                                        sendData(["setUser", res]);// res is user
+                                        sendData(["Accountinterface_setUser", res]);// res is user
+                                    });
                                 } else if (number === 0) {
                                     console.log(`user (id: ${id} ) exist but password isn't correct`);
                                     sendData(["response_for_login", { msg: "password is not correct" }]);
@@ -156,18 +162,42 @@ db.once("open", () => {
                     break;
                 }
                 case "getCards": {
-                    User.find({ id: { $not: { $regex: userID } } })
+                    const { userID } = payload;
+                    User.find({ id: { $not: { $regex: toString(userID) } } })
                         .sort({ _id: 1 })
                         .exec((err, res) => {
                             if (err) throw err;
-                            console.log(res);
+                            //console.log(res);
                             // initialize app with existing users
                             sendData(["initCard", res]);
                         });
                 }
+                case "getUser": {
+                    console.log("receive: getuser")
+                    const { userID } = payload;
+                    User.find({ id: userID }).exec((err, res) => {
+                        if (err) throw err;
+                        //console.log(res);
+                        sendData(["setUser", res]);
+                    });
+                }
+                case "Accountinterface_getUser": {
+                    console.log("receive: Accountinterface_getUser")
+                    const { userID } = payload;
+                    User.find({ id: userID }).exec((err, res) => {
+                        if (err) throw err;
+                        //console.log(res);
+                        sendData(["Accountinterface_setUser", res]);
+                    });
+                }
+                case "Accountinterface_updateUser":{
+                    console.log("receive: Accountinterface_updateUser")
+                    const { user_id,infotobeupdate,newvalue } = payload;
+                    console.log(payload)
+                }
                 case "like": {
-                    const { id } = payload;
-                    console.log(id);
+                    const { userID, id } = payload;
+                    //console.log(id);
                     User.updateOne({ id: userID }, { $addToSet: { like: id } }, (err, res) => {
                         if (err) throw err;
                     });
@@ -176,18 +206,18 @@ db.once("open", () => {
                     });
                     User.find({ id: userID }).exec((err, res) => {
                         if (err) throw err;
-                        console.log(res);
+                        //console.log(res);
                         sendData(["likeList", res[0].like]);
                         sendData(["likedByList", res[0].likedBy]);
                     });
                     User.find({ id: id }).exec((err, res) => {
                         if (err) throw err;
-                        console.log(res);
+                        //console.log(res);
                     });
                     break;
                 }
                 case "dislike": {
-                    const { id } = payload;
+                    const { userID, id } = payload;
                     User.updateOne({ id: userID }, { $addToSet: { dislike: id } }, (err, res) => {
                         if (err) throw err;
                     });
@@ -196,7 +226,7 @@ db.once("open", () => {
                     });
                     User.find({ id: { $in: [userID, id] } }).exec((err, res) => {
                         if (err) throw err;
-                        console.log(res);
+                        //console.log(res);
                     });
                     break;
                 }

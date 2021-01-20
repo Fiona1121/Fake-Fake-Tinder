@@ -3,13 +3,13 @@ import "./App.css";
 import Header from "./Header";
 
 import Accountinterface from "./container/accountinterface/accountinterface";
-import Useriinfo from "./container/userinfo/userinfo";
+import Uploadimagetest from "./container/uploadimagetest/uploadimagetest";//用不到
 
 import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Card from "./Card";
+import Card from "./container/card/Card";
 
 function App() {
     return (
@@ -32,9 +32,7 @@ function App() {
                         <Card />
                     </Route>
 
-                    <Route path="/userinfo">
-                        <Useriinfo />
-                    </Route>
+                    
 
                     <Route exact path="/loginpage">
                         <Loginpage />
