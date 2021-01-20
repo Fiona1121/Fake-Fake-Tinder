@@ -92,13 +92,12 @@ db.once("open", () => {
                         sendData(["Image", { imagebuffer: image.buffer }]);
                     });
                 }
-                // case "searchid": {
-                //     console.log("receive: searchid");
-                //     const {id} = payload;
-                //     console.log(id);
-
-                //     break;
-                // }
+                //for testing by Yu
+                case "sendtest": {
+                    const {id,body}=payload
+                    console.log(payload)
+                    sendData([`broadcast${id}`,{ id:id, body:body }])
+                } 
                 case "setUser": {
                     console.log("receive: setUser");
                     const { name, sex, id, password, photodata } = payload;
@@ -127,7 +126,7 @@ db.once("open", () => {
                             );
                             console.log("already create user");
                             sendData(["response_for_signup", { msg: "Sign up sucessfully" }]);
-                            send;
+                            
                         }
                     });
                     break;
