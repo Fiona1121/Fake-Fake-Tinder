@@ -3,10 +3,7 @@ const Schema = mongoose.Schema;
 
 // Creating a schema, sort of like working with an ORM
 const MessageSchema = new Schema({
-    Id: {
-        type: Number,
-        required: [true, "Id field is required."],
-    },
+    
     body: {
         type: String,
         required: [true, "Body field is required."],

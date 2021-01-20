@@ -41,20 +41,24 @@ db.once("open", () => {
         const sendStatus = (s) => {
             sendData(["status", s]);// s={att1: value1, att2: value2}
         };
-        Message.find()
-            .limit(100)
-            .sort({ _id: 1 })
-            .exec((err, res) => {
-                if (err) throw err;
-                //console.log(res)
-                sendData(["initMsg", res]);
-            });
+        
 
         ws.onmessage = (message) => {
             const { data } = message;
             const [task, payload] = JSON.parse(data);
 
             switch (task) {
+                case "intoChat":{
+                    console.log('backend intoChat')
+                    Message.find()
+                    .limit(100)
+                    .sort({ _id: 1 })
+                    .exec((err, res) => {
+                    if (err) throw err;
+                    console.log(res)
+                    sendData(["initMsg", res]);
+                    });
+                }
                 case "sendfile": {
                     //console.log("receive: sendfile");
                     //// payload={"filedata": filedata}
@@ -211,18 +215,23 @@ db.once("open", () => {
                 }
                 case "messageInput": {
                     console.log("receive: messageInput");
-                    //// payload={"filedata": filedata}
-                    const { fromId,toId,body } = payload;
-                    Message.create({ Id:1,fromId:fromId, toId:toId, body:body }, (err, msg) => {
-                        if (err) {
-                            //console.log("img");
-                            console.log(err);
-                            return;
-                        }
+                    Message.create( payload, function (err, res) {
+                        //const {toId} = payload
+                        sendData(["resOfSendMessage", [payload]])
+
+                        //sendData([`broadcast${toId}`,[payload]])
+                        //console.log(`broadcast${toId}`)
+
                     });
 
-                    sendData(["resOfSendMessage", {Id:1,fromId:fromId, toId:toId, body:body}]);
-                    console.log(payload)
+                    const {toId} = payload
+                    wss.clients.forEach(function each(client){
+                        if(client.readyState === WebSocket.OPEN){
+                            client.send(JSON.stringify([`broadcast${toId}`, [payload]]))
+                        }
+                    });
+                    
+                    break
                 }
                 case "clear": {
                     Message.deleteMany({}, () => {

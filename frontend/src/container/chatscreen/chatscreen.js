@@ -12,6 +12,14 @@ function Chatscreen() {
   const [toId,setToId] = useState('9')
   const bodyRef = useRef(null)
 
+  const testclick = ()=> {
+    setFromId(username)
+  }
+   
+  const testclicktoId = ()=> {
+    setToId(username)
+  }
+
   const displayStatus = (s) => {
     if (s.msg) {
       const { type, msg } = s
@@ -28,7 +36,7 @@ function Chatscreen() {
           message.info(content)
           break
         case 'danger':
-        default:
+        default :
           message.error(content)
           break
       }
@@ -55,8 +63,11 @@ function Chatscreen() {
           Clear
         </Button>
       </div>
+      <button onClick={testclick}></button>
+      <p> From Id : {fromId}</p>
+      <p> To Id : {toId}</p>
       <div className="App-messages">
-
+      <button onClick={testclicktoId}></button>
         {messages.length === 0 ? (
           <p style={{ color: '#ccc' }}>
             {opened? 'No messages...' : 'Loading...'}
@@ -64,7 +75,7 @@ function Chatscreen() {
         ) : (
           messages.map(({ body }, i) => (
             <p className="App-message" key={i}>
-              <Tag color="blue">Toby</Tag> {body}
+              <Tag color="blue">{username}</Tag> {body}
             </p>
           ))
         )}

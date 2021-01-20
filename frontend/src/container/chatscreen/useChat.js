@@ -8,6 +8,7 @@ const useChat = () => {
   const [messages, setMessages] = useState([])
   const [status, setStatus] = useState({})
   const [opened, setOpened] = useState(false)
+  const Id = 3
 
   client.onmessage = (message) => {
     const { data } = message
@@ -19,15 +20,13 @@ const useChat = () => {
         break
       }
       case 'resOfSendMessage': {
-        //console.log(payload)
-
-        const {Id ,fromId, toId, body} = payload ;
-        //console.log(payload)
-        let newpayload = {Id: payload.Id,fromId : payload.fromId, toId: payload.toId, body: body+payload.body }
-        setMessages( messages => [...messages, newpayload])
-        //setMessages([{Id: payload.Id,fromId : payload.fromId, toId: payload.toId, body: body+payload.body }])
-        console.log(messages)
-        //console.log('try')
+        setMessages( (messages) => [...messages, ...payload])
+        
+        break
+      }
+      case `broadcast${Id}`: {
+        setMessages( (messages) => [...messages, ...payload])
+        
         break
       }
       case 'status': {
@@ -46,10 +45,6 @@ const useChat = () => {
     }
   }
 
-  client.onopen = () => {
-    setOpened(true)
-  }
-
   const sendData = (data) => {
     // TODO
     client.send(JSON.stringify(data))
@@ -59,6 +54,14 @@ const useChat = () => {
     // TODO
     sendData(['messageInput', msg]);
   };
+
+  //console.log('frontend intoChat 1')
+  client.onopen = () => {
+    //console.log('frontend intoChat 2')
+    setOpened(true)
+    sendData(['intoChat',{msg : 'intoChatInit'}])
+    
+  }
 
   const clearMessages = () => {
     // TODO
