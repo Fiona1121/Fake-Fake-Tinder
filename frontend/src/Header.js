@@ -50,8 +50,8 @@ function Header({ mode, backButton, userID }) {
                 </IconButton>
             ) : (
                 <Link to="/accounts">
-                    {/* <IconButton onClick={() => sendData(["Accountinterface_getUser", { userID: user.id }])}> */}
-                    <IconButton>
+                    
+                    <IconButton onClick={ () =>  sendData(['Accountinterface_getUser',{ userID: "891206"}])}> {/* 我的db裡有891206的id*/}
                         <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
                     </IconButton>
                 </Link>

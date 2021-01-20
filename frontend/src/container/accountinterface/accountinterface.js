@@ -10,11 +10,13 @@ import Userinfo from './userinfo'
 //const client = new WebSocket("ws://localhost:4000");
 import client from "../../client"
 
-function Accountinterface() {
+var isLogin = false;
+
+function Accountinterface(props) {
     const [imagebuffer, setImagebuffer] = useState(null);
     const [testid,setTestid] = useState("00000000")//for broadcasttest
-    const [user,setUser] = useState({id:"",name:"",photo:"",sex:"",password:""})
-        
+    //const [user,setUser] = useState({id:"",name:"",photo:"",sex:"",password:""})
+    const [user,setUser] = useState(props.user)
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
@@ -23,6 +25,7 @@ function Accountinterface() {
         
         switch (task) {
             case "Accountinterface_setUser": {
+                isLogin = true;
                 console.log("receive: Accountinterface_setUser");
                 console.log(payload)
                 console.log(payload._id)
@@ -93,23 +96,31 @@ function Accountinterface() {
     // };
 
     return (
-        <div className="App-accountinterface">
-            <div className="profile">
-                {/*imagebuffer? <img src={imagebuffer} className='rounded mx-auto d-block' alt='figure' /> : null*/}
-            </div>
-            <div className="setting">
-                <Link to="/loginpage">
-                    <IconButton>
-                        <SettingsRoundedIcon style={{ fontSize: 40 }} className="header__logo" />
-                    </IconButton>
-                </Link>
-            </div>
-            <button onClick={sendtest}> sendtest</button>
-            <Userinfo user={user}/>
-           
+        <div>
+            {isLogin ? (
+            <div className="App-accountinterface">
+                <div className="profile">
+                    {/*imagebuffer? <img src={imagebuffer} className='rounded mx-auto d-block' alt='figure' /> : null*/}
+                </div>
+                <div className="setting">
+                    <Link to="/loginpage">
+                        <IconButton>
+                            <SettingsRoundedIcon style={{ fontSize: 40 }} className="header__logo" />
+                        </IconButton>
+                    </Link>
+                </div>
+                <button onClick={sendtest}> press me will trigger "Accountinterface_setUser"</button>
+                <Userinfo user={user}/>
+            
 
-            
-            
+                
+                
+            </div>
+            ):(
+                <div className="info">
+                    <h3>Please login in or sign up!</h3>
+                </div>
+            )}
         </div>
     );
 }

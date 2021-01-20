@@ -11,6 +11,10 @@ import Signuppage from "./container/login/signuppage/signuppage";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Card from "./container/card/Card";
 
+
+
+
+
 function App() {
     const [user, setUser] = useState({});
     client.onmessage = (message) => {
@@ -37,10 +41,11 @@ function App() {
                     </Route>
                     <Route path="/chats">
                         <Header mode="chat" backButton="/" userID={user.id} />
+                        
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" userID={user.id} />
-                        <Accountinterface />
+                        <Accountinterface user={user}/>
                     </Route>
 
                     <Route exact path="/">
