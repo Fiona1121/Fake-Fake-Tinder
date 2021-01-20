@@ -12,24 +12,35 @@ const useChat = () => {
   client.onmessage = (message) => {
     const { data } = message
     const [task, payload] = JSON.parse(data)
-
+    //console.log(task, payload)
     switch (task) {
-      case 'init': {
+      case 'initMsg': {
         setMessages(() => payload)
         break
       }
-      case 'output': {
-        setMessages(() => [...messages, ...payload])
+      case 'resOfSendMessage': {
+        //console.log(payload)
+
+        const {Id ,fromId, toId, body} = payload ;
+        //console.log(payload)
+        let newpayload = {Id: payload.Id,fromId : payload.fromId, toId: payload.toId, body: body+payload.body }
+        setMessages( messages => [...messages, newpayload])
+        //setMessages([{Id: payload.Id,fromId : payload.fromId, toId: payload.toId, body: body+payload.body }])
+        console.log(messages)
+        //console.log('try')
         break
       }
       case 'status': {
         setStatus(payload)
+        //console.log('status')
         break
       }
       case 'cleared': {
+        //console.log('cleared')
         setMessages([])
         break
       }
+      
       default:
         break
     }

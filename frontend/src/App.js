@@ -6,6 +6,10 @@ import Accountinterface from "./container/accountinterface/accountinterface"
 import Useriinfo from "./container/userinfo/userinfo"
 import Chatscreen  from "./container/chatscreen/chatscreen"
 
+
+import Loginpage from "./container/login/loginipage/loginpage"
+import Signuppage from "./container/login/signuppage/signuppage"
+
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Card from "./Card";
 
@@ -23,16 +27,24 @@ function App() {
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" />
-                        <Accountinterface/>   
+                        <Accountinterface />
                     </Route>
 
                     <Route exact path="/">
                         <Header />
-                        <Card />
+                        <Card/>
                     </Route>
 
                     <Route path="/userinfo">
-                        <Useriinfo/> 
+                        <Useriinfo />
+                    </Route>
+
+                    <Route exact path="/loginpage">
+                        <Loginpage/> 
+                    </Route>
+
+                    <Route exact path="/signuppage">
+                        <Signuppage/> 
                     </Route>
                     
                 </Switch>

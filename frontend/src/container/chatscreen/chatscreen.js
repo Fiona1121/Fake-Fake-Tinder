@@ -34,33 +34,44 @@ function Chatscreen() {
       }
     }
   }
+  
+  const test = () =>{
+    console.log('length of msg', messages.length)
+  }
+  
 
   useEffect(() => {
     displayStatus(status)
   }, [status])
 
+  //console.log('length of msg', messages.length)
+
   return (
     <div className="App-chatscreen">
+        <button onClick={test}></button>
       <div className="App-title">
-        <h1>Simple Chat</h1>
+        <h1>Chat Room</h1>
         <Button type="primary" danger onClick={clearMessages}>
           Clear
         </Button>
       </div>
       <div className="App-messages">
+
         {messages.length === 0 ? (
           <p style={{ color: '#ccc' }}>
             {opened? 'No messages...' : 'Loading...'}
           </p>
         ) : (
-          messages.map(({ name, body }, i) => (
+          messages.map(({ body }, i) => (
             <p className="App-message" key={i}>
-              <Tag color="blue">{name}</Tag> {body}
+              <Tag color="blue">Toby</Tag> {body}
             </p>
           ))
         )}
       </div>
+      
       <Input
+        
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
@@ -87,7 +98,7 @@ function Chatscreen() {
             })
             return
           }
-        //console.log("hello ")
+        
           sendMessage({ fromId:fromId , toId:toId, body:body})
           setBody('')
         }}

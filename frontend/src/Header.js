@@ -1,9 +1,6 @@
 import React from "react";
 import "./Header.css";
 
-//import "./container/accountinterface/accountinterface"
-
-
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"; //account button
 import ForumOutlinedIcon from "@material-ui/icons/ForumOutlined"; //chat button

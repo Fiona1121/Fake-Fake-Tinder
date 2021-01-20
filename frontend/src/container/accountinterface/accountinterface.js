@@ -41,7 +41,7 @@ function Accountinterface() {
                 {/*imagebuffer? <img src={imagebuffer} className='rounded mx-auto d-block' alt='figure' /> : null*/}
             </div>
             <div className="setting">
-                <Link to="/userinfo">
+                <Link to="/loginpage">
                     <IconButton>
                         <SettingsRoundedIcon style={{ fontSize: 40 }} className="header__logo" />
                     </IconButton>
