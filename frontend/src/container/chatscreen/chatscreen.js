@@ -3,12 +3,16 @@ import React, { useEffect, useRef, useState } from 'react'
 import useChat from './useChat'
 import { Button, Input, message, Tag } from 'antd'
 
-function Chatscreen() {
+function Chatscreen({user}) {
+  const {id, name, photo} = user
+  const haveFriend = false
+  const manSelect  = false
+
   const { status, opened, messages, sendMessage, clearMessages } = useChat()
 
   const [username, setUsername] = useState('')
   const [body, setBody] = useState('')
-  const [fromId,setFromId] = useState('3')
+  const [fromId,setFromId] = useState('')
   const [toId,setToId] = useState('9')
   const bodyRef = useRef(null)
 
@@ -57,12 +61,15 @@ function Chatscreen() {
   return (
     <div className="App-chatscreen">
         <button onClick={test}></button>
+       
+      <img src="https://reurl.cc/V33ZY5"></img> {/* 顯示本人頭貼    */}
       <div className="App-title">
-        <h1>Chat Room</h1>
+        <h1> {name}'s Room </h1> {/*設定名字 */}
         <Button type="primary" danger onClick={clearMessages}>
           Clear
         </Button>
       </div>
+      
       <button onClick={testclick}></button>
       <p> From Id : {fromId}</p>
       <p> To Id : {toId}</p>
@@ -73,20 +80,24 @@ function Chatscreen() {
             {opened? 'No messages...' : 'Loading...'}
           </p>
         ) : (
-          messages.map(({ body }, i) => (
-            <p className="App-message" key={i}>
-              <Tag color="blue">{username}</Tag> {body}
+          messages.map(({ body, fromId, toId }, i) => {
+            console.log(id, body, fromId, toId)
+            if(id === fromId || id === toId ){
+            <p className="App-message" key={i} style={{color : "black"}}>
+               <Tag color="black"><img src="https://reurl.cc/V33ZY5"></img></Tag> {body}{/* 每條訊息都要有人頭圖片 */}
             </p>
-          ))
+            }
+          })
         )}
       </div>
       
       <Input
-        
         placeholder="Username"
-        value={username}
+        value= 'Select'
+        //*** 這邊改成下拉式選單 也要修正toId 之後拿到他的資料 manSelect改成true 預設給9*/
+        
         onChange={(e) => setUsername(e.target.value)}
-        style={{ marginBottom: 10 }}
+        style={{ marginBottom: 10, color:"black" }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
             bodyRef.current.focus()
@@ -99,6 +110,7 @@ function Chatscreen() {
         value={body}
         ref={bodyRef}
         enterButton="Send"
+        style = {{background: "black"}}
         onChange={(e) => setBody(e.target.value)}
         placeholder="Type a message here..."
         onSearch={(msg) => {
@@ -109,8 +121,7 @@ function Chatscreen() {
             })
             return
           }
-        
-          sendMessage({ fromId:fromId , toId:toId, body:body})
+          sendMessage({ fromId:id , toId:toId, body:body})
           setBody('')
         }}
       ></Input.Search>

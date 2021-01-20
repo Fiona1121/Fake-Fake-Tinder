@@ -159,6 +159,10 @@ db.once("open", () => {
                     });
                     break;
                 }
+                case "initHeader": {
+                    const { userID } = payload;
+                    sendData(["initHeader", { id: userID }]);
+                }
                 case "getCards": {
                     const { userID } = payload;
                     User.find({ id: { $not: { $regex: toString(userID) } } })
@@ -172,11 +176,13 @@ db.once("open", () => {
                 }
                 case "getUser": {
                     const { userID } = payload;
-                    User.find({ id: userID }).exec((err, res) => {
-                        if (err) throw err;
-                        //console.log(res);
-                        sendData(["setUser", res]);
-                    });
+                    if (userID) {
+                        User.find({ id: userID }).exec((err, res) => {
+                            if (err) throw err;
+                            //console.log(res);
+                            sendData(["setUser", res]);
+                        });
+                    }
                 }
                 case "like": {
                     const { userID, id } = payload;
@@ -220,7 +226,7 @@ db.once("open", () => {
                         sendData(["resOfSendMessage", [payload]])
 
                         //sendData([`broadcast${toId}`,[payload]])
-                        //console.log(`broadcast${toId}`)
+                        
 
                     });
 
@@ -228,6 +234,8 @@ db.once("open", () => {
                     wss.clients.forEach(function each(client){
                         if(client.readyState === WebSocket.OPEN){
                             client.send(JSON.stringify([`broadcast${toId}`, [payload]]))
+                            console.log(`broadcast${toId}`)
+                            console.log(payload)
                         }
                     });
                     
