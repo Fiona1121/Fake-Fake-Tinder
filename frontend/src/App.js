@@ -9,7 +9,7 @@ import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import Card from "./Card";
+import Card from "./container/card/Card";
 
 function App() {
     return (
