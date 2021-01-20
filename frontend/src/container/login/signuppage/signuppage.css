@@ -1,0 +1,112 @@
+.btn {
+    background-color: #ff6766;
+    border: none;
+    line-height: 50px;
+    height: 50px;
+    text-align: center;
+    width: 250px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 15px;
+    text-decoration: underline;
+    transition: all 0.3s;
+    position: relative;
+}
+.btn-one {
+    background-color: #ff6766;
+    border: none;
+    line-height: 50px;
+    height: 50px;
+    text-align: center;
+    width: 250px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s;
+    position: relative;
+}
+.btn-one span {
+    transition: all 0.3s;
+}
+.btn-one::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    transition: all 0.3s;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255, 255, 255, 0.5);
+    border-bottom-color: rgba(255, 255, 255, 0.5);
+    transform: scale(0.1, 1);
+}
+.btn-one:hover span {
+    letter-spacing: 2px;
+}
+.btn-one:hover::before {
+    opacity: 1;
+    transform: scale(1, 1);
+}
+.btn-one::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: all 0.3s;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.btn-one:hover::after {
+    opacity: 0;
+    transform: scale(0.1, 1);
+}
+h3 {
+    margin: 0;
+    padding: 15px 0 0 0;
+    font-size: 15px;
+    text-align: center;
+}
+
+form {
+    padding: 40px;
+}
+input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+input[type="text"],
+input[type="password"] {
+    border: none;
+    border-bottom: 0.5px solid #fff;
+    background: transparent;
+    outline: none;
+    height: 30px;
+    color: #f5f5f0;
+    font-size: 15px;
+}
+
+.box {
+    background-color: #ff6766;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+    border-color: #525252;
+    border-width: 5px;
+    color: #ffffff;
+    box-shadow: -5px -5px 9px #c2c2c2;
+}

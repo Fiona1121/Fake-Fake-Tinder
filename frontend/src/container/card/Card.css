@@ -46,3 +46,15 @@
     padding: 2.5vw !important;
     color: #76e2b3 !important;
 }
+
+.info {
+    display: flex;
+    justify-content: center;
+    margin-top: 40vh;
+}
+
+.info > h3 {
+    position: relative;
+    bottom: 10px;
+    color: #666666;
+}
