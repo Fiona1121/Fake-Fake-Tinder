@@ -322,8 +322,8 @@ db.once("open", () => {
                     break;
                 }
                 case "messageInput": {
-                
-                        
+                    console.log("receive: messageInput");
+                    console.log(payload)
                     Message.create( payload, function (err, res) {
                         //const {toId} = payload
                         sendData(["resOfSendMessage", [payload]])

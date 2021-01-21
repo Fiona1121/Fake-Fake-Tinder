@@ -4,41 +4,25 @@ import useChat from './useChat'
 import { Button, Input, message, Tag } from 'antd'
 import client from '../../client'
 
-function Chatscreen({user}) {
-  const {id, name, photo} = user
-  const haveFriend = false
-  const manSelect  = false
+// function Chatscreen({user}) {
+  // const {id, name, photo} = user
+  // const haveFriend = false
+  // const manSelect  = false
 
-  const chatuser1={name:"123",id:"123"}
-  const chatuser2={name:"456",id:"456"}
+  // const chatuser1={name:"123",id:"123"}
+  // const chatuser2={name:"456",id:"456"}
 
-  const { status, opened, messages, sendMessage, clearMessages } = useChat()
+function Chatscreen() {
+  const { status, opened, messages, chatuserlist, fromId, toId, handleFromidchange, handleToidchange, sendMessage, clearMessages } = useChat()
 
   const [username, setUsername] = useState('')
   const [body, setBody] = useState('')
-  const [fromId,setFromId] = useState('')
-  const [toId,setToId] = useState('9')
+  
   const bodyRef = useRef(null)
 
-  const [chatuser,setChatuser]= useState("")
-  const [chatuserlist,setChatuserlist] = useState([chatuser1,chatuser2])//init from backend
-
-  const handleChatuserChange = (value) => {
-    setChatuser(value)//value is chatuser
-    setToId(value)
-  }
-  const SelectFrom = (value) => {
-    //setChatuser(value)//value is chatuser
-    setFromId(value)
-  }
-
-  
+ 
    
-  const getinitchatusers = ()=>{
-    console.log("init chatusers")
-    sendData(['getchatusers',{userID: "1"}])
-  }
-
+  
   const displayStatus = (s) => {
     if (s.msg) {
       const { type, msg } = s
@@ -62,9 +46,7 @@ function Chatscreen({user}) {
     }
   }
   
-  // const test = () =>{
-  //   console.log('length of msg', messages.length)
-  // }
+  
   
   const sendData = (data) => {
     // TODO
@@ -75,15 +57,16 @@ function Chatscreen({user}) {
     displayStatus(status)
   }, [status])
 
-  //console.log('length of msg', messages.length)
+  
 
   return (
     <div className="App-chatscreen">
-        <button onClick={getinitchatusers}></button><p>getinitchatusers</p>
+        {/* <button onClick={getinitchatusers}></button><p>getinitchatusers</p> */}
        
-      <img src="https://reurl.cc/V33ZY5"></img> {/* 顯示本人頭貼    */}
+      {/* </div><img src="https://reurl.cc/V33ZY5"></img> 顯示本人頭貼    */}
+        
       <div className="App-title">
-        <h1> {name}'s Room </h1> {/*設定名字 */}
+        {/* <h1> {name}'s Room </h1> 設定名字 */}
         <Button type="primary" danger onClick={clearMessages}>
           Clear
         </Button>
@@ -91,7 +74,7 @@ function Chatscreen({user}) {
       
       <p> From Id : {fromId}</p>
       <p> To Id : {toId}</p>
-      <p> chatuser: {chatuser}</p>
+      {/* <p> chatuser: {chatuser}</p> */}
       <div className="App-messages">
       
         {messages.length === 0 ? (
@@ -99,18 +82,23 @@ function Chatscreen({user}) {
             {opened? 'No messages...' : 'Loading...'}
           </p>
         ) : (
-          messages.map(({ body, fromId, toId }, i) => {
-            console.log(id, body, fromId, toId)
-            if(id === fromId || id === toId ){
-            <p className="App-message" key={i} style={{color : "black"}}>
-               <Tag color="black"><img src="https://reurl.cc/V33ZY5"></img></Tag> {body}{/* 每條訊息都要有人頭圖片 */}
+          messages.map((message, i) => (
+            message.fromId === fromId ? (
+            <p className="App-message" key={i}>
+              <Tag color="blue">{fromId + ":"}</Tag> {message.body}
             </p>
-            }
-          })
+            ):(
+              <p className="App-message" key={i}>
+              <Tag color="blue">{message.fromId + ":"}  </Tag> {message.body}
+            </p>
+
+            )
+          ))
         )}
       </div>
       
       {/* <Input
+        
         placeholder="Username"
         value= 'Select'
         //*** 這邊改成下拉式選單 也要修正toId 之後拿到他的資料 manSelect改成true 預設給9
@@ -123,19 +111,19 @@ function Chatscreen({user}) {
           }
         }}
       ></Input> */}
-      <div>
-        <select onChange = {e =>handleChatuserChange(e.target.value)}>
-          {chatuserlist.map((chatuser, i)=>{
-              return <option key= {i}> {chatuser.name}</option>
-          })}
-        </select>  
+      <div className="control">
+          <select onChange={e => handleToidchange(e.target.value)}>
+              {chatuserlist.map((chatuser, i) => {
+                  return <option key={i}>{chatuser.id}</option>;
+                  })}
+          </select>
       </div>
-      <div>
-        <select onChange = {e =>SelectFrom(e.target.value)}>
-          {chatuserlist.map((chatuser, i)=>{
-              return <option key= {i}> {chatuser.name}</option>
-          })}
-        </select>  
+      <div className="control">
+          <select onChange={e => handleFromidchange(e.target.value)}>
+              {chatuserlist.map((chatuser, i) => {
+                  return <option key={i}>{chatuser.id}</option>;
+                  })}
+          </select>
       </div>
       
       <Input.Search
@@ -154,9 +142,8 @@ function Chatscreen({user}) {
           //   })
           //   return
           // }
-          console.log("sendmessage")
-          sendMessage("messageInput",{ fromId:7, toId:5, body:body})
-          console.log(id, toId, body)
+        
+          sendMessage({ fromId:fromId , toId:toId, body:body})
           setBody('')
         }}
       ></Input.Search>

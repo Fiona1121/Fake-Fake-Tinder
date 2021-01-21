@@ -8,7 +8,32 @@ const useChat = () => {
   const [messages, setMessages] = useState([])
   const [status, setStatus] = useState({})
   const [opened, setOpened] = useState(false)
-  const Id = 3
+  
+
+  const chatuser1 = { id:"3"}
+  const chatuser2 = { id:"891206"}
+  const chatuser3 = { id: "123"}
+
+  const [chatuserlist,setChatuserlist] = useState([chatuser1,chatuser2])
+  const [chatuserid,setChatuserid]=useState("")
+  const [fromId,setFromId] = useState('')
+  const [toId,setToId] = useState('')
+
+
+  const handleToidchange = (newid) => {
+    //setChatuserid(newid)
+    setToId(newid)
+  }
+  const handleFromidchange = (newid) => {
+    
+    setFromId(newid)
+  }
+
+
+
+
+
+
 
   client.onmessage = (message) => {
     const { data } = message
@@ -25,7 +50,7 @@ const useChat = () => {
         
         break
       }
-      case `broadcast${Id}`: {
+      case `broadcast${fromId}`: {
         setMessages( (messages) => [...messages, ...payload])
         
         break
@@ -77,6 +102,13 @@ const useChat = () => {
     status,
     opened,
     messages,
+
+    chatuserlist,
+    fromId,
+    toId,
+    handleFromidchange,
+    handleToidchange,
+
     sendMessage,
     clearMessages
   }
