@@ -5,13 +5,17 @@ import Chatscreen  from "./container/chatscreen/chatscreen"
 
 import client from "./client";
 import Accountinterface from "./container/accountinterface/accountinterface";
-import Useriinfo from "./container/userinfo/userinfo";
+import Uploadimagetest from "./container/uploadimagetest/uploadimagetest";//用不到
 
 import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Card from "./container/card/Card";
+
+
+
+
 
 function App() {
     const [user, setUser] = useState({});
@@ -41,22 +45,20 @@ function App() {
                     <Route path="/chats">
                         <Header mode="chat" backButton="/" userID={user.id} />
                         <Chatscreen user={user}/>
+                        
                     </Route>
                     <Route path="/accounts">
                         <Header mode="account" backButton="/" userID={user.id} />
-                        <Accountinterface />
+                        <Accountinterface user={user}/>
                     </Route>
                     
 
                     <Route exact path="/">
                         <Header />
-                        <Card userID={user.id} />
+                        <Card userID={user.id}/>
                     </Route>
 
-                    <Route path="/userinfo">
-                        <Header mode="account" backButton="/" userID={user.id} />
-                        <Useriinfo />
-                    </Route>
+                    
 
                     <Route exact path="/loginpage">
                         <Header mode="account" backButton="/" userID={user.id} />

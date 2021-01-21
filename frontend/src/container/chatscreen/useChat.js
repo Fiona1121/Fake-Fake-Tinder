@@ -13,7 +13,8 @@ const useChat = () => {
   client.onmessage = (message) => {
     const { data } = message
     const [task, payload] = JSON.parse(data)
-    //console.log(task, payload)
+    
+
     switch (task) {
       case 'initMsg': {
         setMessages(() => payload)
@@ -28,6 +29,10 @@ const useChat = () => {
         setMessages( (messages) => [...messages, ...payload])
         
         break
+      }
+      case "initchatusers" : {
+        console.log("receive: initchatuser")
+        console.log(payload)
       }
       case 'status': {
         setStatus(payload)
