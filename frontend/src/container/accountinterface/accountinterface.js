@@ -11,7 +11,7 @@ import Userinfo from './userinfo'
 //const client = new WebSocket("ws://localhost:4000");
 import client from "../../client"
 
-var isLogin = false;
+var isLogin = true;
 
 function Accountinterface(props) {
     const [imagebuffer, setImagebuffer] = useState(null);
