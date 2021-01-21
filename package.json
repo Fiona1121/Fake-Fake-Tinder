@@ -27,8 +27,8 @@
     },
     "scripts": {
         "start": "node ./backend/server.js",
-        "build": "react-scripts build",
-        "predeploy": "yarn build",
+        "build": "cd frontend && react-scripts build",
+        "predeploy": "cd frontend && yarn build",
         "deploy": "gh-pages -d build"
     },
     "engines": {
