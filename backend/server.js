@@ -1,6 +1,3 @@
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-
 const express = require("express");
 const path = require("path");
 const port = process.env.PORT || 80;
