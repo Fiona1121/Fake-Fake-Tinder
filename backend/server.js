@@ -14,6 +14,8 @@ import User from "./models/user.js";
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
+var curUser = {};
 if (!process.env.MONGO_URL) {
     console.error("Missing MONGO_URL!!!");
     process.exit(1);
@@ -123,7 +125,9 @@ db.once("open", () => {
                             User.find({ id: id }).exec((err, res) => {
                                 if (err) throw err;
                                 //console.log(res);
-                                sendData(["setUser", res]);
+                                sendData(["setCardUser", res]); // res is user
+                                sendData(["setAppUser", res]);
+                                curUser = res;
                                 // sendData(["Accountinterface_setUser",res]) // res is user >>Accountinterface_setUser
                             });
                         }
@@ -146,7 +150,9 @@ db.once("open", () => {
                                         if (err) throw err;
                                         //console.log(res);
                                         console.log(`user(id: ${id}) log in`);
-                                        sendData(["setUser", res]); // res is user
+                                        curUser = res;
+                                        sendData(["setCardUser", res]); // res is user
+                                        sendData(["setAppUser", res]);
                                         // sendData(["Accountinterface_setUser", res]);// res is user >>Accountinterface_setUser
                                     });
                                 } else if (number === 0) {
@@ -167,14 +173,16 @@ db.once("open", () => {
                 }
                 case "getCards": {
                     const { userID } = payload;
-                    User.find({ id: { $not: { $regex: toString(userID) } } })
-                        .sort({ _id: 1 })
-                        .exec((err, res) => {
-                            if (err) throw err;
-                            //console.log(res);
-                            // initialize app with existing users
-                            sendData(["initCard", res]);
-                        });
+                    if (userID) {
+                        User.find({ id: { $not: { $regex: toString(userID) } } })
+                            .sort({ _id: 1 })
+                            .exec((err, res) => {
+                                if (err) throw err;
+                                //console.log(res);
+                                // initialize app with existing users
+                                sendData(["initCard", res]);
+                            });
+                    }
                 }
                 case "getUser": {
                     console.log("receive: getuser");
@@ -183,19 +191,22 @@ db.once("open", () => {
                         User.find({ id: userID }).exec((err, res) => {
                             if (err) throw err;
                             //console.log(res);
-                            sendData(["setUser", res]);
+                            sendData(["setCardUser", res]);
                         });
+                        sendData(["initHeader", { id: userID }]);
                     }
                 }
                 case "Accountinterface_getUser": {
                     console.log("receive: Accountinterface_getUser");
                     console.log(payload);
                     const { userID } = payload;
-                    User.find({ id: userID }).exec((err, res) => {
-                        if (err) throw err;
-                        //console.log(res);
-                        sendData(["Accountinterface_setUser", res]);
-                    });
+                    if (userID) {
+                        User.find({ id: userID }).exec((err, res) => {
+                            if (err) throw err;
+                            console.log("account get user: ", res[0].id);
+                            sendData(["Accountinterface_setUser", res]);
+                        });
+                    }
                 }
 
                 case "Accountinterface_updateUser": {

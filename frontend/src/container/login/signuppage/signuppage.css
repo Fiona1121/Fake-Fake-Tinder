@@ -79,12 +79,11 @@ h3 {
 form {
     padding: 40px;
 }
-input {
+.input {
     width: 100%;
     margin-bottom: 10px;
 }
-input[type="text"],
-input[type="password"] {
+.input {
     border: none;
     border-bottom: 0.5px solid #fff;
     background: transparent;

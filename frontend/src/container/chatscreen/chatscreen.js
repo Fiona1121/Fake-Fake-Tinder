@@ -7,8 +7,8 @@ function Chatscreen() {
 
     const [username, setUsername] = useState("");
     const [body, setBody] = useState("");
-    const [fromId, setFromId] = useState("3");
-    const [toId, setToId] = useState("9");
+    const [fromId, setFromId] = useState("Fiona");
+    const [toId, setToId] = useState("");
     const bodyRef = useRef(null);
 
     const displayStatus = (s) => {
@@ -56,9 +56,9 @@ function Chatscreen() {
                 {messages.length === 0 ? (
                     <p style={{ color: "#ccc" }}>{opened ? "No messages..." : "Loading..."}</p>
                 ) : (
-                    messages.map(({ body }, i) => (
+                    messages.map(({ body, fromId }, i) => (
                         <p className="App-message" key={i}>
-                            <Tag color="blue">Toby</Tag> {body}
+                            <Tag color="blue">{fromId}</Tag> {body}
                         </p>
                     ))
                 )}

@@ -3,9 +3,9 @@ import "./App.css";
 import Header from "./Header";
 import client from "./client";
 import Accountinterface from "./container/accountinterface/accountinterface";
-import Useriinfo from "./container/userinfo/userinfo";
+//import Useriinfo from "./container/userinfo/userinfo";
 import Chatscreen from "./container/chatscreen/chatscreen";
-import Uploadimagetest from "./container/uploadimagetest/uploadimagetest"; //用不到
+//import Uploadimagetest from "./container/uploadimagetest/uploadimagetest"; //用不到
 
 import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
@@ -20,9 +20,9 @@ function App() {
         const [task, payload] = JSON.parse(data);
 
         switch (task) {
-            case "setUser": {
+            case "setAppUser": {
                 console.log("set user");
-                setUser({ id: payload.id });
+                setUser(payload[0]);
                 break;
             }
             default: {

@@ -1,56 +1,54 @@
 import { useCallback, useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import './accountinterface.css'
+import "./accountinterface.css";
 import IconButton from "@material-ui/core/IconButton";
 import SettingsRoundedIcon from "@material-ui/icons/SettingsRounded"; // setting button
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import Userinfo from './userinfo'
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import Userinfo from "./userinfo";
 
 //const client = new WebSocket("ws://localhost:4000");
-import client from "../../client"
+import client from "../../client";
 
 var isLogin = false;
 
 function Accountinterface(props) {
     const [imagebuffer, setImagebuffer] = useState(null);
-    const [testid,setTestid] = useState("00000000")//for broadcasttest
+    const [testid, setTestid] = useState("00000000"); //for broadcasttest
     //const [user,setUser] = useState({id:"",name:"",photo:"",sex:"",password:""})
-    const [user,setUser] = useState(props.user)
+    const [user, setUser] = useState(props.user);
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
-        
-        
-        
+
         switch (task) {
             case "Accountinterface_setUser": {
                 isLogin = true;
                 console.log("receive: Accountinterface_setUser");
-                console.log(payload)
-                console.log(payload._id)
-                
+                console.log(payload);
+                console.log(payload[0]._id);
+
                 //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
-                   
+
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
-                setUser(payload[0])
-            
+                setUser(payload[0]);
+
                 break;
             }
             case "Accountinterface_updateUser": {
                 console.log("receive: Accountinterface_updateUser");
                 //console.log(payload)// is old one
-                const {_id} = payload;
+                const { _id } = payload;
 
                 //sendData(['Accountinterface_getUser',{ userID: }])
-                
+
                 //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
-                   
+
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
                 //setUser(payload[0])
-            
+
                 break;
             }
             case "Image": {
@@ -62,10 +60,8 @@ function Accountinterface(props) {
             }
             case `broadcast${testid}`: {
                 console.log(`receive: broadcast${testid}`);
-                const {id, body}= payload
-                console.log(payload)
-
-                
+                const { id, body } = payload;
+                console.log(payload);
 
                 break;
             }
@@ -78,15 +74,13 @@ function Accountinterface(props) {
 
     const sendtest = () => {
         //console.log('sendtest: { id: "fromid", body:"testbody"}')
-        console.log('sendtest: { userID: "891206"}')
-        sendData(['Accountinterface_getUser',{ userID: "891206"}])
-    }
+        //console.log('sendtest: { userID: "891206"}');
+        sendData(["Accountinterface_getUser", { userID: user.id }]);
+    };
     // const sendtest2 = () => {
     //     console.log('sendtest2: { id: "fromid", body:"testbody"}')
     //     sendData(['sendtest',{ id: testid, body:"testbody"}])
     // }
-
-
 
     // var Hi_url = "60040f3741ef153e7cd5e71f";
     // //sendData(['getImageByID',{_id: Hi_url}])
@@ -98,27 +92,30 @@ function Accountinterface(props) {
     return (
         <div>
             {isLogin ? (
-            <div className="App-accountinterface">
-                <div className="profile">
-                    {/*imagebuffer? <img src={imagebuffer} className='rounded mx-auto d-block' alt='figure' /> : null*/}
+                <div className="App-accountinterface card-box">
+                    <div className="profile">
+                        {/*imagebuffer? <img src={imagebuffer} className='rounded mx-auto d-block' alt='figure' /> : null*/}
+                    </div>
+                    <br></br>
+                    <Userinfo user={user} />
+                    <br></br>
+                    <div className="setting">
+                        <Link to="/loginpage">
+                            <button className="btn-one" type="submit">
+                                Log Out
+                            </button>
+                        </Link>
+                    </div>
                 </div>
-                <div className="setting">
+            ) : (
+                <div className="card-box">
+                    <h3>PLEASE LOGIN!!</h3>
+                    <br></br>
                     <Link to="/loginpage">
-                        <IconButton>
-                            <SettingsRoundedIcon style={{ fontSize: 40 }} className="header__logo" />
-                        </IconButton>
+                        <button className="btn-one" type="submit">
+                            Login
+                        </button>
                     </Link>
-                </div>
-                <button onClick={sendtest}> press me will trigger "Accountinterface_setUser"</button>
-                <Userinfo user={user}/>
-            
-
-                
-                
-            </div>
-            ):(
-                <div className="info">
-                    <h3>Please login in or sign up!</h3>
                 </div>
             )}
         </div>
@@ -126,7 +123,6 @@ function Accountinterface(props) {
 }
 
 export default Accountinterface;
-
 
 // <div className="settinglist">
 // <ul className="todo-app__list" id="todo-list">
@@ -140,7 +136,7 @@ export default Accountinterface;
 //                     <KeyboardArrowRightIcon style={{ fontSize: 30 }} className="header__logo" />
 //                 </IconButton>
 //             </Link>
-            
+
 //     </li>
 //     <li className="todo-app__item">
 //             <h1 id="header_one_0" className="todo-app__item-detail">
@@ -160,7 +156,6 @@ export default Accountinterface;
 //             </h1>
 //             <h2> {user.password}</h2>
 //     </li>
-    
 
 // </ul>
 // </div>

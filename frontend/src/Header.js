@@ -8,9 +8,9 @@ import ArrowForwardIosOutlinedIcon from "@material-ui/icons/ArrowForwardIosOutli
 import FavoriteTwoToneIcon from "@material-ui/icons/FavoriteTwoTone"; //main page button
 import { Link, useHistory } from "react-router-dom";
 import client from "./client";
-const User = { id: null };
 
 function Header({ mode, backButton, userID }) {
+    console.log("header: user", userID);
     const history = useHistory();
     const [user, setUser] = useState({ id: userID });
     const sendData = (data) => {
@@ -21,11 +21,9 @@ function Header({ mode, backButton, userID }) {
         const [task, payload] = JSON.parse(data);
 
         switch (task) {
-            case "setUser": {
-                console.log("set user");
-                setUser({ id: payload.id });
-                User.id = payload.id;
-                sendData(["getCards", { userID: user.id }]);
+            case "initHeader": {
+                console.log("init header user", payload);
+                setUser(() => payload);
                 break;
             }
             default: {
@@ -51,7 +49,7 @@ function Header({ mode, backButton, userID }) {
                     </IconButton>
                 ) : (
                     <Link to="/accounts">
-                        <IconButton onClick={() => sendData(["Accountinterface_getUser", { userID: "891206" }])}>
+                        <IconButton onClick={() => sendData(["Accountinterface_getUser", { userID: user.id }])}>
                             {" "}
                             {/* 我的db裡有891206的id*/}
                             <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
@@ -60,7 +58,7 @@ function Header({ mode, backButton, userID }) {
                 )}
 
                 <Link to="/">
-                    <IconButton onClick={() => sendData(["getCards", { userID: user.id }])}>
+                    <IconButton onClick={() => reloadMain()}>
                         <FavoriteTwoToneIcon style={{ fontSize: 45 }} color="secondary" className="header__logo" />
                     </IconButton>
                 </Link>
@@ -75,14 +73,8 @@ function Header({ mode, backButton, userID }) {
                         <ArrowForwardIosOutlinedIcon fontSize="large" className="header__icon" />
                     </IconButton>
                 ) : (
-                    <Link to={user.id ? "/chats" : "/"}>
-                        <IconButton
-                            onClick={() => {
-                                if (!user.id) {
-                                    alert("Please login!");
-                                }
-                            }}
-                        >
+                    <Link to="/chats">
+                        <IconButton>
                             <ForumOutlinedIcon className="header__icon" fontSize="large" />
                         </IconButton>
                     </Link>
