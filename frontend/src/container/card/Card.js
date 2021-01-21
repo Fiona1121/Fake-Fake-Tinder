@@ -26,18 +26,20 @@ const Card = ({ userID }) => {
 
         switch (task) {
             case "setCardUser": {
-                console.log("set user", payload[0].id);
-                isLogin = true;
-                setUser({ id: payload[0].id });
-                setLike(payload[0].like);
-                setLikedBy(payload[0].likedBy);
-                sendData(["getCards", { userID: payload[0].id }]);
-                sendData(["initHeader", { userID: payload[0].id }]);
+                if (payload[0] !== undefined) {
+                    console.log("set user", payload[0].id);
+                    isLogin = true;
+                    setUser({ id: payload[0].id });
+                    setLike(payload[0].like);
+                    setLikedBy(payload[0].likedBy);
+                    sendData(["getCards", { userID: payload[0].id }]);
+                    sendData(["initHeader", { userID: payload[0].id }]);
+                }
                 break;
             }
             case "initCard": {
                 setPeople(() => payload);
-                console.log("Card accept init card")
+                console.log("Card accept init card");
                 break;
             }
             case "likeList": {
