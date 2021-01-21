@@ -31,33 +31,33 @@ function Accountinterface(props) {
             case "Accountinterface_setUser": {
                 isLogin = true;
                 console.log("receive: Accountinterface_setUser");
-                console.log(payload);
-                console.log(payload[0]._id);
+                //console.log(payload);
+                //console.log(payload[0]._id);
 
                 //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
 
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
                 setUser(payload[0]);
-                //sendData(["initHeader", { userID: payload[0].id }]);
+                sendData(["initHeader", { userID: payload[0].id }]);
 
                 break;
             }
-            case "Accountinterface_updateUser": {
-                console.log("receive: Accountinterface_updateUser");
-                //console.log(payload)// is old one
-                const { _id } = payload;
+            // case "Accountinterface_updateUser": {
+            //     console.log("receive: Accountinterface_updateUser");
+            //     //console.log(payload)// is old one
+            //     const { _id } = payload;
 
-                //sendData(['Accountinterface_getUser',{ userID: }])
+            //     //sendData(['Accountinterface_getUser',{ userID: }])
 
-                //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
-                //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
+            //     //const { id, name, photo, sex ,password} = payload[0]; // {imagebuffer:image.buffer}
+            //     //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
 
-                //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
-                //setUser(payload[0])
+            //     //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
+            //     //setUser(payload[0])
 
-                break;
-            }
+            //     break;
+            // }
             case "Image": {
                 console.log("receive: Image");
                 const { imagebuffer } = payload; // {imagebuffer:image.buffer}
@@ -70,6 +70,9 @@ function Accountinterface(props) {
                 const { id, body } = payload;
                 console.log(payload);
 
+                break;
+            }
+            default: {
                 break;
             }
         }

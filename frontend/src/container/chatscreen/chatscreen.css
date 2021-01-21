@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 80vh;
-    width: 500px;
+    width: 70%;
     margin: auto;
 }
 
@@ -31,6 +31,10 @@
     color: black;
 }
 
-.input {
+.toID-select {
+    flex-direction: row;
+    display: flex;
+}
+.chat-input {
     color: black;
 }

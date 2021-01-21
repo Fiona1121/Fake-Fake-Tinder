@@ -4,7 +4,8 @@ import { useState } from "react";
 // const client = new W3CWebSocket('ws://localhost:4000')
 const client = new WebSocket("ws://localhost:4000");
 
-const useChat = () => {
+const useChat = (User) => {
+    const [user, setUser] = useState(User);
     const [messages, setMessages] = useState([]);
     const [status, setStatus] = useState({});
     const [opened, setOpened] = useState(false);
@@ -13,48 +14,13 @@ const useChat = () => {
     // const chatuser2 = { id:"891206"}
     // const chatuser3 = { id: "123"}
 
-    const [chatuserlist, setChatuserlist] = useState([]);
-    const [chatuserid, setChatuserid] = useState("");
-    const [fromId, setFromId] = useState("111");
-    const [toId, setToId] = useState("");
-
-    const handleToidchange = (newid) => {
-        //setChatuserid(newid)
-        setToId(newid);
-    };
-    const handleFromidchange = (newid) => {
-        setFromId(newid);
-    };
-
-    const getchatuserlist = () => {
-        //console.log("getchatuserlist")
-        sendData(["getchatuserlist", { fromId: fromId }]);
-    };
+    //const [fromId, setFromId] = useState(user.id);
 
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
         //console.log(task, payload)
         switch (task) {
-            case "initMsg": {
-                setMessages(() => payload);
-                break;
-            }
-            case "resOfSendMessage": {
-                setMessages((messages) => [...messages, ...payload]);
-
-                break;
-            }
-            case `broadcast${fromId}`: {
-                setMessages((messages) => [...messages, ...payload]);
-
-                break;
-            }
-            case "initchatuserlist": {
-                console.log("initchatuserlist");
-                console.log(payload);
-                setChatuserlist(payload);
-            }
             case "status": {
                 setStatus(payload);
                 //console.log('status')
@@ -94,19 +60,8 @@ const useChat = () => {
 
     return {
         status,
-        opened,
-        messages,
 
-        chatuserlist,
-        fromId,
-        toId,
-        handleFromidchange,
-        handleToidchange,
-
-        sendMessage,
         clearMessages,
-
-        getchatuserlist,
     };
 };
 
