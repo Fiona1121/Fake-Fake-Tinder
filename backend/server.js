@@ -1,28 +1,11 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 const express = require("express");
 const path = require("path");
-const port = process.env.PORT || 80;
+const __dirname = path.resolve();
 const app = express();
-
-app.use(express.static(path.join(__dirname, "build")));
-
-const bodyParser = require("body-parser");
-app.use(bodyParser.json());
-
-app.get("/ping", function (req, res) {
-    return res.send("pong");
-});
-
-app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
-app.listen(port);
-console.log("Server Ready!");
-
-//==========================================================================
-
 require("dotenv-defaults").config();
-
 const http = require("http");
 const mongoose = require("mongoose");
 const WebSocket = require("ws");
@@ -31,10 +14,19 @@ import Message from "./models/message.js";
 import Image from "./models/image.js";
 import User from "./models/user.js";
 
+const PORT = process.env.PORT || 4000;
+
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+
+// app.listen(port);
+console.log("Server Ready!");
+
+//==========================================================================
+
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-var curUser = {};
 if (!process.env.MONGO_URL) {
     console.error("Missing MONGO_URL!!!");
     process.exit(1);
@@ -390,10 +382,14 @@ db.once("open", () => {
             }
         };
     });
+});
 
-    //const PORT = process.env.port || 4000;
+app.use(express.static(path.join(__dirname, "./frontend/build")));
 
-    server.listen(PORT, () => {
-        console.log(`Listening on http://localhost:${PORT}`);
-    });
+app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "./frontend/build", "index.html"));
+});
+
+app.listen(PORT, () => {
+    console.log(`Listening on http://localhost:${PORT}`);
 });
