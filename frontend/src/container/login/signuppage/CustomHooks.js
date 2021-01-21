@@ -6,6 +6,13 @@ const useSignUpForm = (initialValues, callback) => {
   const [photo, setPhoto] = useState(null)
   const [photodata, setPhotodata] = useState(null)
   const [toHomePage, setToHomePage] = useState(false);
+
+  const [selectsex,setSelectsex] = useState("")
+  const [selectsexes,setSelectsexes] = useState(["male","female"])
+
+  const handleSelectsexChange = async(value) => {
+    await setSelectsex(value)
+  }
   
   client.onmessage = (message) => {
     const { data } = message;
@@ -36,7 +43,7 @@ const useSignUpForm = (initialValues, callback) => {
   };
   const sendUserSignup = (userinfo,photodata)=> {
     let { Name, Sex, id, password1 } = userinfo;
-    let userdata={ "name":Name, "sex": Sex, "id":id, "password": password1, "photodata": photodata}
+    let userdata={ "name":Name, "sex": selectsex, "id":id, "password": password1, "photodata": photodata}
     sendData(  ["setUser",userdata])
   }
 
@@ -75,6 +82,9 @@ const useSignUpForm = (initialValues, callback) => {
     handleSubmit,
     handleInputChange,
     handlePhotoInputChange,
+    handleSelectsexChange,
+    selectsex,
+    selectsexes,
     inputs,
     photo,
     photodata,

@@ -7,18 +7,17 @@ import "./Card.css";
 import client from "../../client";
 
 const alreadyRemoved = new Set();
+var isLogin = false;
 
-const Card = () => {
+const Card = ({ userID }) => {
     const [people, setPeople] = useState([]);
     const [likedBy, setLikedBy] = useState([]);
     const [like, setLike] = useState([]);
-    const [isLogin, setIsLogin] = useState(false);
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({ id: userID });
 
     const sendData = (data) => {
         client.send(JSON.stringify(data));
     };
-
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
@@ -26,19 +25,16 @@ const Card = () => {
         switch (task) {
             case "setUser": {
                 //console.log("set user");
-                setIsLogin(true);
+                isLogin = true;
                 setUser({ id: payload.id });
                 setLike(payload.like);
                 setLikedBy(payload.likedBy);
                 sendData(["getCards", { userID: user.id }]);
+                sendData(["initHeader", { userID: user.id }]);
                 break;
             }
             case "initCard": {
                 setPeople(() => payload);
-                break;
-            }
-            case "updateCard": {
-                setPeople(() => [...people, ...payload]);
                 break;
             }
             case "likeList": {
@@ -66,7 +62,7 @@ const Card = () => {
             addDislike(idToDelete);
         }
         if (direction === "right") {
-            if (likedBy.includes(idToDelete)) console.log("match!");
+            //if (likedBy.includes(idToDelete)) console.log("match!");
             addLike(idToDelete);
         }
     };

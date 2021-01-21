@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined"; //account button
@@ -10,9 +10,9 @@ import { Link, useHistory } from "react-router-dom";
 import client from "./client";
 const User = { id: null };
 
-function Header({ mode, backButton }) {
+function Header({ mode, backButton, userID }) {
     const history = useHistory();
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState({ id: userID });
     const sendData = (data) => {
         client.send(JSON.stringify(data));
     };
@@ -22,10 +22,13 @@ function Header({ mode, backButton }) {
 
         switch (task) {
             case "setUser": {
-                //console.log("set user");
+                console.log("set user");
                 setUser({ id: payload.id });
                 User.id = payload.id;
                 sendData(["getCards", { userID: user.id }]);
+                break;
+            }
+            default: {
                 break;
             }
         }
@@ -47,7 +50,8 @@ function Header({ mode, backButton }) {
                 </IconButton>
             ) : (
                 <Link to="/accounts">
-                    <IconButton>
+                    
+                    <IconButton onClick={ () =>  sendData(['Accountinterface_getUser',{ userID: "891206"}])}> {/* 我的db裡有891206的id*/}
                         <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
                     </IconButton>
                 </Link>

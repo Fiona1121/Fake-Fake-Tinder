@@ -23,7 +23,7 @@ const Loginpage = () => {
                     <div className="box">
                         <form onSubmit={handleSubmit} autoComplete="off">
                             <div className="field">
-                                <label className="label has-text-centered">id</label>
+                                <h3 className="label">User Id</h3>
                                 <div className="control">
                                     <input
                                         className="input"
@@ -35,9 +35,8 @@ const Loginpage = () => {
                                     />
                                 </div>
                             </div>
-
                             <div className="field">
-                                <label className="label has-text-centered">Password</label>
+                                <h3 className="label">Password</h3>
                                 <div className="control">
                                     <input
                                         className="input"
@@ -48,13 +47,14 @@ const Loginpage = () => {
                                     />
                                 </div>
                             </div>
-
-                            <button className="button is-block is-fullwidth is-success" type="submit">
-                                Log in
+                            <br></br>
+                            <br></br>
+                            <button className="btn-one" type="submit">
+                                Login
                             </button>
-                            <p>Has no account?</p>
+                            <h3>Has no account?</h3>
                             <Link to="/signuppage">
-                                <button>Sign up Page</button>
+                                <button className="btn">Sign up</button>
                             </Link>
                         </form>
                     </div>
