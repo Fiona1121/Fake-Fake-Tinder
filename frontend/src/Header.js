@@ -10,7 +10,7 @@ import { Link, useHistory } from "react-router-dom";
 import client from "./client";
 const User = { id: null };
 
-function Header({ mode, backButton, userID }) {
+function Header ({ mode, backButton, userID }) {
     const history = useHistory();
     const [user, setUser] = useState({ id: userID });
     const sendData = (data) => {
@@ -28,6 +28,19 @@ function Header({ mode, backButton, userID }) {
                 sendData(["getCards", { userID: user.id }]);
                 break;
             }
+            case "Accountsettup": {
+                console.log("In Header")
+                console.log("Accountsettup");
+                console.log(payload[0])
+                //setUser({ id: payload.id });
+                setUser(payload[0])
+                break;
+            }
+            case "initCard": {
+                //setPeople(() => payload);
+                console.log("Header accept")
+                break;
+            }
             default: {
                 break;
             }
@@ -37,6 +50,10 @@ function Header({ mode, backButton, userID }) {
         sendData(["getUser", { userID: user.id }]);
         sendData(["getCards", { userID: user.id }]);
     };
+    var reloadAccountinterface = async()=> {
+        await sendData(["getUser", { userID: user.id }]);
+        await sendData(['Accountinterface_getUser',{ userID: user.id}])
+    }
     return (
         <div className="header">
             {mode === "chat" ? (
@@ -50,8 +67,21 @@ function Header({ mode, backButton, userID }) {
                 </IconButton>
             ) : (
                 <Link to="/accounts">
+                    <p> user.id: {user.id}</p>
+                    <IconButton onClick={ async() =>  {
+                        if (user.id !== undefined){
+                            //await reloadAccountinterface();
+                            //reloadMain();
+                            //sendData(['Accountinterface_getUser',{ userID: user.id}])
+                            
+                        }
+                        else{
+                            console.log("click setpage but user.id is undefined")
+                        }
+                        }}> 
+                        
                     
-                    <IconButton onClick={ () =>  sendData(['Accountinterface_getUser',{ userID: "891206"}])}> {/* 我的db裡有891206的id*/}
+                        {/* 我的db裡有891206的id*/}
                         <AccountCircleOutlinedIcon fontSize="large" className="header__icon" />
                     </IconButton>
                 </Link>

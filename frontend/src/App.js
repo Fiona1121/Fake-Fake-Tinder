@@ -25,7 +25,20 @@ function App() {
         switch (task) {
             case "setUser": {
                 console.log("set user");
-                setUser({ id: payload.id });
+                //setUser({ id: payload.id });
+                setUser(payload[0])
+                break;
+            }
+            case "Accountsettup": {
+                console.log("Accountsettup");
+                console.log(payload[0])
+                //setUser({ id: payload.id });
+                setUser(payload[0])
+                break;
+            }
+            case "initCard": {
+                
+                console.log("App accept init card")
                 break;
             }
             default: {

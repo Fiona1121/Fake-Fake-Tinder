@@ -4,7 +4,7 @@ import useChat from './useChat'
 import { Button, Input, message, Tag } from 'antd'
 
 function Chatscreen() {
-  const { status, opened, messages, chatuserlist, fromId, toId, handleFromidchange, handleToidchange, sendMessage, clearMessages } = useChat()
+  const { status, opened, messages, chatuserlist, fromId, toId, handleFromidchange, handleToidchange, sendMessage, clearMessages, getchatuserlist } = useChat()
 
 
 
@@ -54,6 +54,7 @@ function Chatscreen() {
 
   return (
     <div className="App-chatscreen">
+      <button onClick={getchatuserlist}> getchatuserlist   </button>
         
       <div className="App-title">
         <h1>Chat Room</h1>

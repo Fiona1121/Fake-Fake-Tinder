@@ -151,6 +151,7 @@ db.once("open", () => {
                                         //console.log(res);
                                         console.log(`user(id: ${id}) log in`)
                                         sendData(["setUser", res]);// res is user
+                                        sendData(["Accountsettup",res]);
                                         // sendData(["Accountinterface_setUser", res]);// res is user >>Accountinterface_setUser
                                     });
                                 } else if (number === 0) {
@@ -341,6 +342,18 @@ db.once("open", () => {
                     });
                     
                     break
+                }
+                case "getchatuserlist":{
+                    console.log("getchatuserlist")
+                    //console.log(payload)
+                    const{fromId} = payload
+                    console.log("out:",fromId)
+                    User.find({ id: { $ne: fromId } }).exec((err, res) => {
+                        if (err) throw err;
+                        //console.log(res);
+                            sendData(["initchatuserlist", res]);
+                        
+                    });
                 }
                 case "clear": {
                     Message.deleteMany({}, () => {

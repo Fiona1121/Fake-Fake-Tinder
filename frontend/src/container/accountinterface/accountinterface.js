@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { Redirect } from "react-router";
 
 import './accountinterface.css'
 import IconButton from "@material-ui/core/IconButton";
@@ -117,9 +118,10 @@ function Accountinterface(props) {
                 
             </div>
             ):(
-                <div className="info">
-                    <h3>Please login in or sign up!</h3>
-                </div>
+                <Redirect to="/loginpage" />
+                // <div className="info">
+                //     <h3>Please login in or sign up!</h3>
+                // </div>
             )}
         </div>
     );

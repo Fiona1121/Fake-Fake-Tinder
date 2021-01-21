@@ -35,6 +35,7 @@ const Card = ({ userID }) => {
             }
             case "initCard": {
                 setPeople(() => payload);
+                console.log("Card accept init card")
                 break;
             }
             case "likeList": {
