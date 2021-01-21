@@ -394,7 +394,7 @@ db.once("open", () => {
         };
     });
 
-    const PORT = process.env.port || 4000;
+    //const PORT = process.env.port || 4000;
 
     server.listen(PORT, () => {
         console.log(`Listening on http://localhost:${PORT}`);
