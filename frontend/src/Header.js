@@ -26,6 +26,19 @@ function Header({ mode, backButton, userID }) {
                 setUser(() => payload);
                 break;
             }
+            case "Accountsettup": {
+                console.log("In Header");
+                console.log("Accountsettup");
+                console.log(payload[0]);
+                //setUser({ id: payload.id });
+                setUser(payload[0]);
+                break;
+            }
+            case "initCard": {
+                //setPeople(() => payload);
+                console.log("Header accept");
+                break;
+            }
             default: {
                 break;
             }
@@ -34,6 +47,10 @@ function Header({ mode, backButton, userID }) {
     var reloadMain = () => {
         sendData(["getUser", { userID: user.id }]);
         sendData(["getCards", { userID: user.id }]);
+    };
+    var reloadAccountinterface = async () => {
+        await sendData(["getUser", { userID: user.id }]);
+        await sendData(["Accountinterface_getUser", { userID: user.id }]);
     };
     return (
         <>

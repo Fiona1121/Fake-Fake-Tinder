@@ -16,9 +16,12 @@ const Signuppage = () => {
         photo,
         photodata,
         toHomePage,
+        selectsex,
+        selectsexes,
         handleInputChange,
         handlePhotoInputChange,
         handleSubmit,
+        handleSelectsexChange,
     } = useSignUpForm({ Name: "", Sex: "", id: "", password1: "", password2: "" }, signup);
     const selectfilebtnRef = useRef({});
     const clickselectphoto = () => {
@@ -48,7 +51,7 @@ const Signuppage = () => {
                             </div>
 
                             <div className="field">
-                                <h3 className="h3 has-text-centered">Sex</h3>
+                                {/* <h3 className="h3 has-text-centered">Sex</h3>
                                 <div className="control">
                                     <input
                                         className="input"
@@ -58,6 +61,14 @@ const Signuppage = () => {
                                         value={inputs.Sex}
                                         required
                                     />
+                                </div> */}
+                                <h3 className="h3 has-text-centered">Sex</h3>
+                                <div className="control">
+                                    <select onChange={e => handleSelectsexChange(e.target.value)}>
+                                        {selectsexes.map((selectsex, i) => {
+                                            return <option key={i}>{selectsex}</option>;
+                                            })}
+                                    </select>
                                 </div>
                             </div>
 

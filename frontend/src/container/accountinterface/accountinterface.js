@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { Redirect } from "react-router";
 
 import "./accountinterface.css";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,6 +18,11 @@ function Accountinterface(props) {
     const [testid, setTestid] = useState("00000000"); //for broadcasttest
     //const [user,setUser] = useState({id:"",name:"",photo:"",sex:"",password:""})
     const [user, setUser] = useState(props.user);
+
+    const sendData = (data) => {
+        client.send(JSON.stringify(data));
+    };
+
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
@@ -33,6 +39,7 @@ function Accountinterface(props) {
 
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
                 setUser(payload[0]);
+                //sendData(["initHeader", { userID: payload[0].id }]);
 
                 break;
             }
@@ -66,10 +73,6 @@ function Accountinterface(props) {
                 break;
             }
         }
-    };
-
-    const sendData = (data) => {
-        client.send(JSON.stringify(data));
     };
 
     const sendtest = () => {

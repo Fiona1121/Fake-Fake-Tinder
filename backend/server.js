@@ -49,7 +49,8 @@ db.once("open", () => {
             const [task, payload] = JSON.parse(data);
 
             switch (task) {
-                case "msgInit": {
+                case "intoChat": {
+                    console.log("backend intoChat");
                     Message.find()
                         .limit(100)
                         .sort({ _id: 1 })
@@ -58,7 +59,6 @@ db.once("open", () => {
                             console.log(res);
                             sendData(["initMsg", res]);
                         });
-                    console.log("init");
                 }
                 case "sendfile": {
                     //console.log("receive: sendfile");
@@ -314,10 +314,35 @@ db.once("open", () => {
                 }
 
                 case "messageInput": {
+                    console.log("receive: messageInput");
+                    console.log(payload);
                     Message.create(payload, function (err, res) {
+                        //const {toId} = payload
                         sendData(["resOfSendMessage", [payload]]);
+
+                        //sendData([`broadcast${toId}`,[payload]])
+                        //console.log(`broadcast${toId}`)
                     });
+
+                    const { toId } = payload;
+                    wss.clients.forEach(function each(client) {
+                        if (client.readyState === WebSocket.OPEN) {
+                            client.send(JSON.stringify([`broadcast${toId}`, [payload]]));
+                        }
+                    });
+
                     break;
+                }
+                case "getchatuserlist": {
+                    console.log("getchatuserlist");
+                    //console.log(payload)
+                    const { fromId } = payload;
+                    console.log("out:", fromId);
+                    User.find({ id: { $ne: fromId } }).exec((err, res) => {
+                        if (err) throw err;
+                        //console.log(res);
+                        sendData(["initchatuserlist", res]);
+                    });
                 }
                 case "clear": {
                     Message.deleteMany({}, () => {

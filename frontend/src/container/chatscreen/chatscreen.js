@@ -3,12 +3,23 @@ import React, { useEffect, useRef, useState } from "react";
 import useChat from "./useChat";
 import { Button, Input, message, Tag } from "antd";
 function Chatscreen() {
-    const { status, opened, messages, sendMessage, clearMessages } = useChat();
+    const {
+        status,
+        opened,
+        messages,
+        chatuserlist,
+        fromId,
+        toId,
+        handleFromidchange,
+        handleToidchange,
+        sendMessage,
+        clearMessages,
+        getchatuserlist,
+    } = useChat();
 
     const [username, setUsername] = useState("");
     const [body, setBody] = useState("");
-    const [fromId, setFromId] = useState("Fiona");
-    const [toId, setToId] = useState("");
+
     const bodyRef = useRef(null);
 
     const displayStatus = (s) => {
@@ -34,64 +45,79 @@ function Chatscreen() {
         }
     };
 
-    const test = () => {
-        console.log("length of msg", messages.length);
-    };
-
-    useEffect(() => {
-        displayStatus(status);
-    }, [status]);
-
-    //console.log('length of msg', messages.length)
-
     return (
         <div className="App-chatscreen">
+            <button onClick={getchatuserlist}> getchatuserlist </button>
+
             <div className="App-title">
                 <h1>Chat Room</h1>
                 <Button type="primary" danger onClick={clearMessages}>
                     Clear
                 </Button>
             </div>
+
+            <p> From Id : {fromId}</p>
+            <p> To Id : {toId}</p>
             <div className="App-messages">
                 {messages.length === 0 ? (
                     <p style={{ color: "#ccc" }}>{opened ? "No messages..." : "Loading..."}</p>
                 ) : (
-                    messages.map(({ body, fromId }, i) => (
-                        <p className="App-message" key={i}>
-                            <Tag color="blue">{fromId}</Tag> {body}
-                        </p>
-                    ))
+                    messages.map((message, i) =>
+                        message.fromId === fromId ? (
+                            <p className="App-message" key={i}>
+                                <Tag color="blue">{fromId + ":"}</Tag> {message.body}
+                            </p>
+                        ) : (
+                            <p className="App-message" key={i}>
+                                <Tag color="blue">{message.fromId + ":"} </Tag> {message.body}
+                            </p>
+                        )
+                    )
                 )}
             </div>
 
-            <Input
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                style={{ marginBottom: 10, color: "black" }}
-                onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        bodyRef.current.focus();
-                    }
-                }}
-            ></Input>
+            {/* <Input
+        
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        style={{ marginBottom: 10 }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            bodyRef.current.focus()
+          }
+        }}
+      ></Input> */}
+            <div className="control">
+                <select onChange={(e) => handleToidchange(e.target.value)}>
+                    {chatuserlist.map((chatuser, i) => {
+                        return <option key={i}>{chatuser.id}</option>;
+                    })}
+                </select>
+            </div>
+            <div className="control">
+                <select onChange={(e) => handleFromidchange(e.target.value)}>
+                    {chatuserlist.map((chatuser, i) => {
+                        return <option key={i}>{chatuser.id}</option>;
+                    })}
+                </select>
+            </div>
 
             <Input.Search
                 rows={4}
                 value={body}
                 ref={bodyRef}
                 enterButton="Send"
-                style={{ background: "black" }}
                 onChange={(e) => setBody(e.target.value)}
                 placeholder="Type a message here..."
                 onSearch={(msg) => {
-                    if (!msg || !username) {
-                        displayStatus({
-                            type: "error",
-                            msg: "Please enter a username and a message body.",
-                        });
-                        return;
-                    }
+                    // if (!msg || !username) {
+                    //   displayStatus({
+                    //     type: 'error',
+                    //     msg: 'Please enter a username and a message body.'
+                    //   })
+                    //   return
+                    // }
 
                     sendMessage({ fromId: fromId, toId: toId, body: body });
                     setBody("");

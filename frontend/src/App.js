@@ -3,12 +3,11 @@ import "./App.css";
 import Header from "./Header";
 import client from "./client";
 import Accountinterface from "./container/accountinterface/accountinterface";
-//import Useriinfo from "./container/userinfo/userinfo";
-import Chatscreen from "./container/chatscreen/chatscreen";
-//import Uploadimagetest from "./container/uploadimagetest/uploadimagetest"; //用不到
+import Uploadimagetest from "./container/uploadimagetest/uploadimagetest"; //用不到
 
 import Loginpage from "./container/login/loginipage/loginpage";
 import Signuppage from "./container/login/signuppage/signuppage";
+import Chatscreen from "./container/chatscreen/chatscreen";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Card from "./container/card/Card";
@@ -35,7 +34,7 @@ function App() {
             <Router>
                 <Switch>
                     <Route path="/chats">
-                        <Header mode="chat" backButton="/" userID={user.id} />
+                        <Header mode="chat" backButton="/" />
                         <Chatscreen />
                     </Route>
                     <Route path="/accounts">
