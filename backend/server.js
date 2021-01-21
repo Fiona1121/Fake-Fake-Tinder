@@ -1,7 +1,11 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 const express = require("express");
 const path = require("path");
 const port = process.env.PORT || 80;
 const app = express();
+
 app.use(express.static(path.join(__dirname, "build")));
 
 const bodyParser = require("body-parser");
@@ -20,12 +24,9 @@ console.log("Server Ready!");
 
 //==========================================================================
 
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
 require("dotenv-defaults").config();
 
 const http = require("http");
-const express = require("express");
 const mongoose = require("mongoose");
 const WebSocket = require("ws");
 
@@ -33,7 +34,6 @@ import Message from "./models/message.js";
 import Image from "./models/image.js";
 import User from "./models/user.js";
 
-const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
