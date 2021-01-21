@@ -11,6 +11,12 @@ const Userinfo = (props) => {
     const { user } = props;
     const inputRef = useRef({});
 
+    const [name,setName]=useState(user.name)
+    const [sex,setSex]=useState(user.sex)
+    const [id,setId]=useState(user.id)
+    const [password,setPassword]=useState(user.password)
+    
+
     const [info_be_setting, setInfo_be_setting] = useState("none");
     const [infoinput, setInfoinput] = useState("");
     const [placeholder, setPlaceholder] = useState("");
@@ -34,6 +40,19 @@ const Userinfo = (props) => {
         console.log("updateinfo");
 
         sendupdateinfo({ user_id: user._id, id: user.id, infotobeupdate: info_be_setting, newvalue: infoinput });
+        if (info_be_setting === 'name'){
+            setName(infoinput)
+        }
+        else if (info_be_setting === 'sex'){
+            setSex(infoinput)
+        }
+        else if (info_be_setting === 'password'){
+            setPassword(infoinput)
+        }
+        else if (info_be_setting === 'id'){
+            setId(infoinput)
+        }
+
 
         setInfo_be_setting("none");
     };
@@ -61,7 +80,7 @@ const Userinfo = (props) => {
                     <h1 id="header_one_0" className="todo-app__item-detail">
                         Name
                     </h1>
-                    <h2> {user.name}</h2>
+                    <h2> {name}</h2>
 
                     <IconButton onClick={() => setinfo("name", user.name)}>
                         <KeyboardArrowRightIcon style={{ fontSize: 30 }} className="header__logo" />
@@ -71,7 +90,7 @@ const Userinfo = (props) => {
                     <h1 id="header_one_0" className="todo-app__item-detail">
                         Sex
                     </h1>
-                    <h2> {user.sex}</h2>
+                    <h2> {sex}</h2>
 
                     <IconButton onClick={() => setinfo("sex", user.sex)}>
                         <KeyboardArrowRightIcon style={{ fontSize: 30 }} className="header__logo" />
@@ -81,7 +100,7 @@ const Userinfo = (props) => {
                     <h1 id="header_one_0" className="todo-app__item-detail">
                         ID
                     </h1>
-                    <h2> {user.id}</h2>
+                    <h2> {id}</h2>
                     <IconButton onClick={() => setinfo("id", user.id)}>
                         <KeyboardArrowRightIcon style={{ fontSize: 30 }} className="header__logo" />
                     </IconButton>
@@ -90,7 +109,7 @@ const Userinfo = (props) => {
                     <h1 id="header_one_0" className="todo-app__item-detail">
                         Password
                     </h1>
-                    <h2> {user.password}</h2>
+                    <h2> {password}</h2>
                     <IconButton onClick={() => setinfo("password", user.password)}>
                         <KeyboardArrowRightIcon style={{ fontSize: 30 }} className="header__logo" />
                     </IconButton>

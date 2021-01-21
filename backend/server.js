@@ -192,9 +192,18 @@ db.once("open", () => {
                             if (err) throw err;
                             //console.log(res);
                             sendData(["setCardUser", res]);
+                        });
+                    }
+                }
+                case "chat_getUser": {
+                    //console.log("receive: getuser");
+                    const { userID } = payload;
+                    if (userID) {
+                        User.find({ id: userID }).exec((err, res) => {
+                            if (err) throw err;
+                            //console.log(res);
                             sendData(["initChat", res]);
                         });
-                        sendData(["initHeader", { id: userID }]);
                     }
                 }
                 case "Accountinterface_getUser": {
@@ -227,7 +236,7 @@ db.once("open", () => {
                             User.find({ _id: user._id }).exec((err, res) => {
                                 if (err) throw err;
                                 //console.log(res);
-                                sendData(["Accountinterface_setUser", res]);
+                                //sendData(["Accountinterface_setUser", res]);
                             });
                         });
                     } else if (infotobeupdate === "sex") {
@@ -237,7 +246,7 @@ db.once("open", () => {
                             User.find({ _id: user._id }).exec((err, res) => {
                                 if (err) throw err;
                                 //console.log(res);
-                                sendData(["Accountinterface_setUser", res]);
+                                //sendData(["Accountinterface_setUser", res]);
                             });
                         });
                     } else if (infotobeupdate === "password") {
@@ -247,7 +256,7 @@ db.once("open", () => {
                             User.find({ _id: user._id }).exec((err, res) => {
                                 if (err) throw err;
                                 //console.log(res);
-                                sendData(["Accountinterface_setUser", res]);
+                                //sendData(["Accountinterface_setUser", res]);
                             });
                         });
                     } else if (infotobeupdate === "id") {
@@ -265,7 +274,7 @@ db.once("open", () => {
                                     User.find({ _id: user._id }).exec((err, res) => {
                                         if (err) throw err;
                                         //console.log(res);
-                                        sendData(["Accountinterface_setUser", res]);
+                                        //sendData(["Accountinterface_setUser", res]);
                                     });
                                 });
                                 console.log("already update user id");

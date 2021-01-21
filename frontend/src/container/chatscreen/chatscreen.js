@@ -74,14 +74,9 @@ function Chatscreen() {
 
     return (
         <div className="App-chatscreen">
-            <button onClick={getchatuserlist}> getchatuserlist </button>
-
             <div className="App-title">
-                <h1>Chat Room</h1>
+                <h1>{user.id}'s Chat Room</h1>
             </div>
-
-            <p> User Id : {user.id}</p>
-            <p> To Id : {toId}</p>
             <div className="App-messages">
                 {messages.length === 0 ? (
                     <p style={{ color: "#ccc" }}>{opened ? "No messages..." : "Loading..."}</p>
@@ -113,14 +108,23 @@ function Chatscreen() {
         }}
       ></Input> */}
             <div className="control">
-                <select onChange={(e) => handleToidchange(e.target.value)}>
-                    {chatuserlist.map((chatuser, i) => {
-                        return <option key={i}>{chatuser.id}</option>;
-                    })}
-                </select>
-            </div>
+                <div className="toID-select">
+                    <h3>Please select user to chat with: </h3>
+                    <select onChange={(e) => handleToidchange(e.target.value)}>
+                        {chatuserlist.map((chatuser, i) => {
+                            return <option key={i}>{chatuser.id}</option>;
+                        })}
+                    </select>
+                </div>
 
+                <h3>Refresh to load more:</h3>
+                <button className="btn-one" onClick={getchatuserlist}>
+                    Refresh
+                </button>
+            </div>
+            <br></br>
             <Input.Search
+                className="chat-input"
                 rows={4}
                 value={body}
                 ref={bodyRef}

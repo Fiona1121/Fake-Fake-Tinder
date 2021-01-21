@@ -93,7 +93,7 @@ function Header({ mode, backButton, userID }) {
                     <Link to="/chats">
                         <IconButton
                             onClick={() => {
-                                sendData(["getUser", { userID: user.id }]);
+                                sendData(["chat_getUser", { userID: user.id }]);
                             }}
                         >
                             <ForumOutlinedIcon className="header__icon" fontSize="large" />
