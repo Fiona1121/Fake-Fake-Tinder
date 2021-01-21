@@ -39,7 +39,7 @@ function Accountinterface(props) {
 
                 //setUser({id:id,name:name,photo:photo,sex:sex,password:password})
                 setUser(payload[0]);
-                //sendData(["initHeader", { userID: payload[0].id }]);
+                sendData(["initHeader", { userID: payload[0].id }]);
 
                 break;
             }

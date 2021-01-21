@@ -185,33 +185,34 @@ db.once("open", () => {
                     }
                 }
                 case "getUser": {
-                    console.log("receive: getuser");
+                    //console.log("receive: getuser");
                     const { userID } = payload;
                     if (userID) {
                         User.find({ id: userID }).exec((err, res) => {
                             if (err) throw err;
                             //console.log(res);
                             sendData(["setCardUser", res]);
+                            sendData(["initChat", res]);
                         });
                         sendData(["initHeader", { id: userID }]);
                     }
                 }
                 case "Accountinterface_getUser": {
-                    console.log("receive: Accountinterface_getUser");
-                    console.log(payload);
+                    //console.log("receive: Accountinterface_getUser");
+                    //console.log(payload);
                     const { userID } = payload;
                     if (userID) {
                         User.find({ id: userID }).exec((err, res) => {
                             if (err) throw err;
-                            console.log("account get user: ", res[0].id);
+                            //console.log("account get user: ", res[0].id);
                             sendData(["Accountinterface_setUser", res]);
                         });
                     }
                 }
 
                 case "Accountinterface_updateUser": {
-                    console.log("receive: Accountinterface_updateUser");
-                    console.log(payload);
+                    //console.log("receive: Accountinterface_updateUser");
+                    //console.log(payload);
                     const { id, user_id, infotobeupdate, newvalue } = payload;
                     const filter111 = { _id: user_id };
                     const filter = { id: id };
