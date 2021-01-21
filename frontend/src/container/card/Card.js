@@ -5,6 +5,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import IconButton from "@material-ui/core/IconButton";
 import "./Card.css";
 import client from "../../client";
+import { Link } from "react-router-dom";
 
 const alreadyRemoved = new Set();
 var isLogin = false;
@@ -18,23 +19,25 @@ const Card = ({ userID }) => {
     const sendData = (data) => {
         client.send(JSON.stringify(data));
     };
+    client.onopen = () => sendData(["getCards", { userID: user.id }]);
     client.onmessage = (message) => {
         const { data } = message;
         const [task, payload] = JSON.parse(data);
 
         switch (task) {
-            case "setUser": {
-                //console.log("set user");
+            case "setCardUser": {
+                console.log("set user", payload[0].id);
                 isLogin = true;
-                setUser({ id: payload.id });
-                setLike(payload.like);
-                setLikedBy(payload.likedBy);
-                sendData(["getCards", { userID: user.id }]);
-                sendData(["initHeader", { userID: user.id }]);
+                setUser({ id: payload[0].id });
+                setLike(payload[0].like);
+                setLikedBy(payload[0].likedBy);
+                sendData(["getCards", { userID: payload[0].id }]);
+                sendData(["initHeader", { userID: payload[0].id }]);
                 break;
             }
             case "initCard": {
                 setPeople(() => payload);
+                console.log("Card accept init card")
                 break;
             }
             case "likeList": {
@@ -135,8 +138,14 @@ const Card = ({ userID }) => {
                     )}
                 </div>
             ) : (
-                <div className="info">
-                    <h3>Please login in or sign up!</h3>
+                <div className="card-box">
+                    <h3>PLEASE LOGIN!!</h3>
+                    <br></br>
+                    <Link to="/loginpage">
+                        <button className="btn-one" type="submit">
+                            Login
+                        </button>
+                    </Link>
                 </div>
             )}
         </div>
