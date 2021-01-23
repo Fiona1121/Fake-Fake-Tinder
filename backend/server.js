@@ -160,7 +160,6 @@ db.once("open", () => {
                                         if (err) throw err;
                                         //console.log(res);
                                         console.log(`user(id: ${id}) log in`);
-                                        curUser = res;
                                         sendData(["setCardUser", res]); // res is user
                                         sendData(["setAppUser", res]);
                                         // sendData(["Accountinterface_setUser", res]);// res is user >>Accountinterface_setUser
