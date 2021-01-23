@@ -11,9 +11,9 @@ Tinder | Dating, Make Friends and Meet New People
 
 MEMBERS : 
 
-電機二 尤韻嘉： 登入跟使用者介面,整合
-電機二 吳詩昀： css,卡片主界面,整合
-電機二 羅昱翔： 聊天介面
+電機二 尤韻嘉： 登入跟使用者介面前後端,聊天介面subscribe,整合
+電機二 吳詩昀： 整體css,卡片滑動主界面前後端,各介面獲取user資訊,整合
+電機二 羅昱翔： 聊天介面前後端
 
 
 
