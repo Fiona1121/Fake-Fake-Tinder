@@ -138,7 +138,6 @@ db.once("open", () => {
                                 //console.log(res);
                                 sendData(["setCardUser", res]); // res is user
                                 sendData(["setAppUser", res]);
-                                curUser = res;
                                 // sendData(["Accountinterface_setUser",res]) // res is user >>Accountinterface_setUser
                             });
                         }

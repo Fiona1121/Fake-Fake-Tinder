@@ -1,4 +1,5 @@
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const client = new W3CWebSocket("ws://localhost:4000");
+const host = "wss://fake-fake-tinder.herokuapp.com/";
+const client = new W3CWebSocket(host);
 
 export default client;
