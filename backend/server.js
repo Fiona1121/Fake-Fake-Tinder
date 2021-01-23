@@ -381,6 +381,17 @@ db.once("open", () => {
             }
         };
     });
+
+    let srv = app.listen(PORT, (err) => {
+        if (err) throw err;
+        console.log(`> Ready on http://localhost:${PORT}`);
+    });
+
+    srv.on("upgrade", function (req, socket, head) {
+        wss.handleUpgrade(req, socket, head, function connected(ws) {
+            wss.emit("connection", ws, req);
+        });
+    });
 });
 
 app.use(express.static(path.join(__dirname, "./frontend/build")));
@@ -388,7 +399,8 @@ app.use(express.static(path.join(__dirname, "./frontend/build")));
 app.get("/*", function (req, res) {
     res.sendFile(path.join(__dirname, "./frontend/build", "index.html"));
 });
-
+/*
 app.listen(PORT, () => {
     console.log(`Listening on http://localhost:${PORT}`);
 });
+*/
