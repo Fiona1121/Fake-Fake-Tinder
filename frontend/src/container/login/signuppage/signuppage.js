@@ -64,10 +64,10 @@ const Signuppage = () => {
                                 </div> */}
                                 <h3 className="h3 has-text-centered">Sex</h3>
                                 <div className="control">
-                                    <select onChange={e => handleSelectsexChange(e.target.value)}>
+                                    <select onChange={(e) => handleSelectsexChange(e.target.value)}>
                                         {selectsexes.map((selectsex, i) => {
                                             return <option key={i}>{selectsex}</option>;
-                                            })}
+                                        })}
                                     </select>
                                 </div>
                             </div>
@@ -122,6 +122,14 @@ const Signuppage = () => {
                                     />
                                     {/*<button className="btn_for_select_photo" onClick={clickselectphoto}>Pick Photo </button>*/}
                                 </div>
+                                {photodata ? (
+                                    <img
+                                        src={photodata}
+                                        style={{ width: 200, top: 50, left: 50 }}
+                                        className="rounded mx-auto d-block"
+                                        alt="figure"
+                                    />
+                                ) : null}
                             </div>
                             <br></br>
                             <br></br>
@@ -133,7 +141,6 @@ const Signuppage = () => {
                                 <button className="btn">Login</button>
                             </Link>
                         </form>
-                        {photodata ? <img src={photodata} className="rounded mx-auto d-block" alt="figure" /> : null}
                     </div>
                 </div>
             </div>

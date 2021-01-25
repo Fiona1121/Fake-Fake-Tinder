@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
@@ -11,11 +11,17 @@ const Userinfo = (props) => {
     const { user } = props;
     const inputRef = useRef({});
 
-    const [name,setName]=useState(user.name)
-    const [sex,setSex]=useState(user.sex)
-    const [id,setId]=useState(user.id)
-    const [password,setPassword]=useState(user.password)
-    
+    const [name, setName] = useState(user.name);
+    const [sex, setSex] = useState(user.sex);
+    const [id, setId] = useState(user.id);
+    const [password, setPassword] = useState(user.password);
+
+    useEffect(() => {
+        setName(user.name);
+        setSex(user.sex);
+        setId(user.id);
+        setPassword(user.password);
+    }, [user]);
 
     const [info_be_setting, setInfo_be_setting] = useState("none");
     const [infoinput, setInfoinput] = useState("");
@@ -40,19 +46,15 @@ const Userinfo = (props) => {
         console.log("updateinfo");
 
         sendupdateinfo({ user_id: user._id, id: user.id, infotobeupdate: info_be_setting, newvalue: infoinput });
-        if (info_be_setting === 'name'){
-            setName(infoinput)
+        if (info_be_setting === "name") {
+            setName(infoinput);
+        } else if (info_be_setting === "sex") {
+            setSex(infoinput);
+        } else if (info_be_setting === "password") {
+            setPassword(infoinput);
+        } else if (info_be_setting === "id") {
+            setId(infoinput);
         }
-        else if (info_be_setting === 'sex'){
-            setSex(infoinput)
-        }
-        else if (info_be_setting === 'password'){
-            setPassword(infoinput)
-        }
-        else if (info_be_setting === 'id'){
-            setId(infoinput)
-        }
-
 
         setInfo_be_setting("none");
     };

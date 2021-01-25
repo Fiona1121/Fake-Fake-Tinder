@@ -78,7 +78,7 @@ db.once("open", () => {
                     Image.create({ buffer: filedata }, (err, img) => {
                         if (err) {
                             //console.log("img");
-                            console.log(err);
+                            //console.log(err);
                             return;
                         }
                     });
@@ -103,7 +103,7 @@ db.once("open", () => {
                 case "sendtest": {
                     const { id, body } = payload;
                     console.log("receive sendtest");
-                    console.log(payload);
+                    //console.log(payload);
                 }
                 case "setUser": {
                     console.log("receive: setUser");
@@ -127,6 +127,7 @@ db.once("open", () => {
                                     if (err) {
                                         console.log("user");
                                         console.log(err);
+                                        sendData(["response_for_signup", { msg: "Sign up sucessfully" }]);
                                         return;
                                     }
                                 }
@@ -183,7 +184,7 @@ db.once("open", () => {
                 case "getCards": {
                     const { userID } = payload;
                     if (userID) {
-                        User.find({ id: { $not: { $regex: toString(userID) } } })
+                        User.find({ id: { $not: userID } })
                             .sort({ _id: 1 })
                             .exec((err, res) => {
                                 if (err) throw err;

@@ -105,13 +105,6 @@ function Accountinterface(props) {
                     <br></br>
                     <Userinfo user={user} />
                     <br></br>
-                    <div className="setting">
-                        <Link to="/loginpage">
-                            <button className="btn-one" type="submit">
-                                Log Out
-                            </button>
-                        </Link>
-                    </div>
                 </div>
             ) : (
                 <div className="card-box">

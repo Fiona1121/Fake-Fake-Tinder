@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     },
     sex: {
         type: String,
-        required: [true, "Sex field is required."],
+        //required: [true, "Sex field is required."],
     },
     photo: {
         type: String,

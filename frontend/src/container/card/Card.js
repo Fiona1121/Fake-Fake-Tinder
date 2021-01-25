@@ -15,6 +15,7 @@ const Card = ({ userID }) => {
     const [likedBy, setLikedBy] = useState([]);
     const [like, setLike] = useState([]);
     const [user, setUser] = useState({ id: userID });
+    alreadyRemoved.add(user.id);
 
     const sendData = (data) => {
         client.send(JSON.stringify(data));
@@ -26,18 +27,20 @@ const Card = ({ userID }) => {
 
         switch (task) {
             case "setCardUser": {
-                console.log("set user", payload[0].id);
-                isLogin = true;
-                setUser({ id: payload[0].id });
-                setLike(payload[0].like);
-                setLikedBy(payload[0].likedBy);
-                sendData(["getCards", { userID: payload[0].id }]);
-                sendData(["initHeader", { userID: payload[0].id }]);
-                break;
+                if (payload[0] !== undefined) {
+                    //console.log("set user", payload[0].id);
+                    isLogin = true;
+                    setUser({ id: payload[0].id });
+                    setLike(payload[0].like);
+                    setLikedBy(payload[0].likedBy);
+                    sendData(["getCards", { userID: payload[0].id }]);
+                    sendData(["initHeader", { userID: payload[0].id }]);
+                    break;
+                }
             }
             case "initCard": {
                 setPeople(() => payload);
-                console.log("Card accept init card")
+                //console.log("Card accept init card");
                 break;
             }
             case "likeList": {
@@ -108,29 +111,34 @@ const Card = ({ userID }) => {
         <div>
             {isLogin ? (
                 <div className="cardContainer">
-                    {people ? (
-                        people.map((person) =>
-                            alreadyRemoved.has(person.id) ? null : (
-                                <TinderCard
-                                    className="swipe"
-                                    key={person.id}
-                                    onSwipe={(dir) => swiped(dir, person.id)}
-                                    preventSwipe={["up", "down"]}
-                                    onCardLeftScreen={() => outOfFrame(person.id)}
-                                >
-                                    <div
-                                        style={{
-                                            backgroundImage: person.photo
-                                                ? `url(${person.photo})`
-                                                : `url(https://i.pinimg.com/originals/7a/98/1d/7a981de80cfa0a7aa92f5d523d3509cc.jpg)`,
-                                        }}
-                                        className="card"
+                    {people.length !== alreadyRemoved.length ? (
+                        <>
+                            <div className="info">
+                                <h3>Loading...</h3>
+                            </div>
+                            {people.map((person) =>
+                                alreadyRemoved.has(person.id) ? null : (
+                                    <TinderCard
+                                        className="swipe"
+                                        key={person.id}
+                                        onSwipe={(dir) => swiped(dir, person.id)}
+                                        preventSwipe={["up", "down"]}
+                                        onCardLeftScreen={() => outOfFrame(person.id)}
                                     >
-                                        <h3>{person.name}</h3>
-                                    </div>
-                                </TinderCard>
-                            )
-                        )
+                                        <div
+                                            style={{
+                                                backgroundImage: person.photo
+                                                    ? `url(${person.photo})`
+                                                    : `url(https://i.pinimg.com/originals/7a/98/1d/7a981de80cfa0a7aa92f5d523d3509cc.jpg)`,
+                                            }}
+                                            className="card"
+                                        >
+                                            <h3>{person.name}</h3>
+                                        </div>
+                                    </TinderCard>
+                                )
+                            )}
+                        </>
                     ) : (
                         <div className="info">
                             <h3>no other user left...</h3>
